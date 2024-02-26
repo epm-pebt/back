@@ -1,0 +1,26 @@
+cd db
+docker build . -t ecobites-db-image
+
+cd ..
+docker build . -t ecobites-backend-image
+
+docker network create -d bridge ecobites-network
+
+docker run -p 5432:5432 --name=ecobites-db-container ecobites-db-image
+
+docker exec -it ecobites-db-container bash
+
+psql -U postgres
+create database ecobitesdb;
+\c ecobitesdb
+-- insert schema from src/main/resources/schema.sql --
+(If the connection is live, you can check the tables with \dt)
+(\q for exit and ctrl+d)
+
+docker network connect ecobites-network ecobites-db-container
+
+docker run -p 8081:8081 --name=ecobites-backend-container --network=ecobites-network ecobites-backend-image
+
+
+To remove container and image you can use `docker rm container-name` and `docker rmi image-name`
+(If the jar file changes, keep in mind that we should change the backend's docker!!)
