@@ -1,5 +1,5 @@
 cd db
-docker build . -t ecobites-db-image
+docker build --build-arg password=1234 --build-arg username=postgres . -t ecobites-db-image
 
 cd ..
 docker build . -t ecobites-backend-image

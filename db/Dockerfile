@@ -1,3 +1,5 @@
 FROM postgres:16
-ENV POSTGRES_USER=postgres
-ENV POSTGRES_PASSWORD=1234
+ARG password
+ENV POSTGRES_PASSWORD=$password
+ARG username
+ENV POSTGRES_USERNAME=$username
