@@ -24,7 +24,7 @@ public class RecipeIngredientConverter implements EntityConverter<RecipeIngredie
     }
 
     @Override
-    public RecipeIngredientDTO toDTO(RecipeIngredient recipeIngredient) {
+    public RecipeIngredientDTO convertToDTO(RecipeIngredient recipeIngredient) {
         return RecipeIngredientDTO.builder()
                 .id(recipeIngredient.getId())
                 .recipeId(recipeIngredient.getRecipe().getId())
@@ -34,7 +34,7 @@ public class RecipeIngredientConverter implements EntityConverter<RecipeIngredie
     }
 
     @Override
-    public RecipeIngredient fromDTO(RecipeIngredientDTO recipeIngredientDto) {
+    public RecipeIngredient convertToEntity(RecipeIngredientDTO recipeIngredientDto) {
         Recipe recipe = recipeRepository.findById(recipeIngredientDto.getRecipeId())
                 .orElseThrow(() -> new NotFoundException("Recipe with id " + recipeIngredientDto.getRecipeId() + " not found"));
         Ingredient ingredient = ingredientRepository.findById(recipeIngredientDto.getIngredientId())

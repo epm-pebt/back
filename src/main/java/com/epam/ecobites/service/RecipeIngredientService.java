@@ -22,32 +22,32 @@ public class RecipeIngredientService implements CrudService<RecipeIngredientDTO,
 
     @Override
     public RecipeIngredientDTO create(RecipeIngredientDTO recipeIngredientDto) {
-        RecipeIngredient recipeIngredient = recipeIngredientConverter.fromDTO(recipeIngredientDto);
+        RecipeIngredient recipeIngredient = recipeIngredientConverter.convertToEntity(recipeIngredientDto);
         RecipeIngredient savedRecipeIngredient = recipeIngredientRepository.save(recipeIngredient);
-        return recipeIngredientConverter.toDTO(savedRecipeIngredient);
+        return recipeIngredientConverter.convertToDTO(savedRecipeIngredient);
     }
 
     @Override
     public RecipeIngredientDTO get(Long id) {
         RecipeIngredient recipeIngredient = recipeIngredientRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("RecipeIngredient with id " + id + " not found"));
-        return recipeIngredientConverter.toDTO(recipeIngredient);
+        return recipeIngredientConverter.convertToDTO(recipeIngredient);
     }
 
     @Override
     public List<RecipeIngredientDTO> getAll() {
         List<RecipeIngredient> recipeIngredients = recipeIngredientRepository.findAll();
-        return recipeIngredients.stream().map(recipeIngredientConverter::toDTO).collect(Collectors.toList());
+        return recipeIngredients.stream().map(recipeIngredientConverter::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
     public RecipeIngredientDTO update(Long id, RecipeIngredientDTO updatedRecipeIngredientDto) {
         validateIds(id, updatedRecipeIngredientDto);
         RecipeIngredient existingRecipeIngredient = findRecipeIngredientById(id);
-        RecipeIngredient updatedRecipeIngredient = recipeIngredientConverter.fromDTO(updatedRecipeIngredientDto);
+        RecipeIngredient updatedRecipeIngredient = recipeIngredientConverter.convertToEntity(updatedRecipeIngredientDto);
         updateRecipeIngredientFields(existingRecipeIngredient, updatedRecipeIngredient);
         RecipeIngredient savedRecipeIngredient = recipeIngredientRepository.save(existingRecipeIngredient);
-        return recipeIngredientConverter.toDTO(savedRecipeIngredient);
+        return recipeIngredientConverter.convertToDTO(savedRecipeIngredient);
     }
 
     private void validateIds(Long id, RecipeIngredientDTO updatedRecipeIngredientDto) {

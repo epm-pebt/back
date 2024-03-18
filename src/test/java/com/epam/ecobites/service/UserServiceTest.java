@@ -32,11 +32,6 @@ public class UserServiceTest {
     @InjectMocks
     private UserService userService;
 
-    /**
-     * Test creating a user with valid data.
-     *
-     * @param username the username of the user to create
-     */
     @DisplayName("Test creating a user with valid data")
     @ParameterizedTest
     @ValueSource(strings = {"test1", "test2", "test3", "test4", "test5"})
@@ -45,8 +40,8 @@ public class UserServiceTest {
         EcoUser user = createUser(username, email);
         EcoUserDTO userDTO = createUserDTO(username, email);
 
-        when(userConverter.fromDTO(userDTO)).thenReturn(user);
-        when(userConverter.toDTO(user)).thenReturn(userDTO);
+        when(userConverter.convertToEntity(userDTO)).thenReturn(user);
+        when(userConverter.convertToDTO(user)).thenReturn(userDTO);
         when(userRepository.save(user)).thenReturn(user);
 
         EcoUserDTO result = userService.create(userDTO);
@@ -61,11 +56,6 @@ public class UserServiceTest {
         verify(userRepository).save(user);
     }
 
-    /**
-     * Test getting a user by id when the user exists.
-     *
-     * @param ids the id of the user to get
-     */
     @DisplayName("Test getting a user by id when the user exists")
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 3, 4, 5})
@@ -75,20 +65,15 @@ public class UserServiceTest {
         EcoUserDTO userDTO = createUserDTO("test", "test@test.com");
 
         when(userRepository.findById(id)).thenReturn(Optional.of(user));
-        when(userConverter.toDTO(user)).thenReturn(userDTO);
+        when(userConverter.convertToDTO(user)).thenReturn(userDTO);
 
         EcoUserDTO result = userService.get(id);
 
         assertEquals(userDTO, result);
 
-        verify(userConverter).toDTO(user);
+        verify(userConverter).convertToDTO(user);
     }
 
-    /**
-     * Test getting a user by id when the user does not exist.
-     *
-     * @param ids the id of the user to get
-     */
     @DisplayName("Test getting a user by id when the user does not exist")
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 3, 4, 5})
@@ -100,11 +85,6 @@ public class UserServiceTest {
         assertThrows(NotFoundException.class, () -> userService.get(id));
     }
 
-    /**
-     * Test getting all users when the list has users.
-     *
-     * @param username the username of the users to get
-     */
     @DisplayName("Test getting all users when the list has users")
     @ParameterizedTest
     @ValueSource(strings = {"test1", "test2", "test3", "test4", "test5"})
@@ -119,17 +99,14 @@ public class UserServiceTest {
         List<EcoUserDTO> userDTOList = Arrays.asList(userDTO1, userDTO2);
 
         when(userRepository.findAll()).thenReturn(userList);
-        when(userConverter.toDTO(user1)).thenReturn(userDTO1);
-        when(userConverter.toDTO(user2)).thenReturn(userDTO2);
+        when(userConverter.convertToDTO(user1)).thenReturn(userDTO1);
+        when(userConverter.convertToDTO(user2)).thenReturn(userDTO2);
 
         List<EcoUserDTO> resultList = userService.getAll();
 
         assertEquals(userDTOList, resultList);
     }
 
-    /**
-     * Test getting all users when the list is empty.
-     */
     @DisplayName("Test getting all users when the list is empty")
     @Test
     public void GetAll_Failed_ListIsEmpty() {
@@ -138,11 +115,6 @@ public class UserServiceTest {
         assertThrows(NotFoundException.class, () -> userService.getAll());
     }
 
-    /**
-     * Test updating a user when the user exists in the repository.
-     *
-     * @param username the username of the user to update
-     */
     @DisplayName("Test updating a user when the user exists in the repository")
     @ParameterizedTest
     @ValueSource(strings = {"test1", "test2", "test3", "test4", "test5"})
@@ -156,9 +128,9 @@ public class UserServiceTest {
         EcoUser updatedUser = createUser(username,updatedEmail);
 
         when(userRepository.findById(id)).thenReturn(Optional.of(existingUser));
-        when(userConverter.fromDTO(updatedUserDTO)).thenReturn(updatedUser);
+        when(userConverter.convertToEntity(updatedUserDTO)).thenReturn(updatedUser);
         when(userRepository.save(updatedUser)).thenReturn(updatedUser);
-        when(userConverter.toDTO(updatedUser)).thenReturn(updatedUserDTO);
+        when(userConverter.convertToDTO(updatedUser)).thenReturn(updatedUserDTO);
 
         EcoUserDTO result = userService.update(id, updatedUserDTO);
 
@@ -171,11 +143,6 @@ public class UserServiceTest {
         verify(userRepository).save(updatedUser);
     }
 
-    /**
-     * Test updating a user when the user does not exist in the repository.
-     *
-     * @param username the username of the user to update
-     */
     @DisplayName("Test updating a user when the user does not exist in the repository")
     @ParameterizedTest
     @ValueSource(strings = {"test1", "test2", "test3", "test4", "test5"})
@@ -190,11 +157,6 @@ public class UserServiceTest {
         assertThrows(NotFoundException.class, () -> userService.update(id, userDTO));
     }
 
-    /**
-     * Test updating a user with an invalid id.
-     *
-     * @param ids the invalid id to use
-     */
     @DisplayName("Test updating a user with an invalid id")
     @ParameterizedTest
     @ValueSource(ints = {0, -1, -2, -3, -4})
@@ -206,11 +168,6 @@ public class UserServiceTest {
         assertThrows(IllegalArgumentException.class, () -> userService.update(id, userDTO));
     }
 
-    /**
-     * Test deleting a user when the user exists in the repository.
-     *
-     * @param ids the id of the user to delete
-     */
     @DisplayName("Test deleting a user when the user exists in the repository")
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 3, 4, 5})
@@ -225,11 +182,6 @@ public class UserServiceTest {
 
     }
 
-    /**
-     * Test deleting a user when the user does not exist in the repository.
-     *
-     * @param ids the id of the user to delete
-     */
     @DisplayName("Test deleting a user when the user does not exist in the repository")
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 3, 4, 5})
@@ -241,18 +193,12 @@ public class UserServiceTest {
         assertThrows(NotFoundException.class, () -> userService.delete(id));
     }
 
-    /**
-     * Test creating a user with null data.
-     */
     @DisplayName("Test creating a user with null data")
     @Test
     public void testCreateUser_NullUserDTO() {
         assertThrows(IllegalArgumentException.class, () -> userService.create(null));
     }
 
-    /**
-     * Test updating a user with null data.
-     */
     @DisplayName("Test updating a user with null data")
     @Test
     public void testUpdateUser_NullUserDTO() {
@@ -260,9 +206,6 @@ public class UserServiceTest {
         assertThrows(IllegalArgumentException.class, () -> userService.update(id, null));
     }
 
-    /**
-     * Test deleting a user with an invalid id.
-     */
     @DisplayName("Test deleting a user with an invalid id")
     @Test
     public void testDeleteUser_InvalidId() {
@@ -270,13 +213,6 @@ public class UserServiceTest {
         assertThrows(NotFoundException.class, () -> userService.delete(id));
     }
 
-    /**
-     * Create a user with the given username and email.
-     *
-     * @param username the username of the user
-     * @param email the email of the user
-     * @return the created user
-     */
     private EcoUser createUser(String username, String email) {
         EcoUser user = new EcoUser();
         user.setId(1L);
@@ -285,13 +221,6 @@ public class UserServiceTest {
         return user;
     }
 
-    /**
-     * Create a user DTO with the given username and email.
-     *
-     * @param username the username of the user DTO
-     * @param email the email of the user DTO
-     * @return the created user DTO
-     */
     private EcoUserDTO createUserDTO(String username, String email) {
         EcoUserDTO userDTO = new EcoUserDTO();
         userDTO.setId(1L);

@@ -22,32 +22,32 @@ public class ReviewService implements CrudService<ReviewDTO, Long> {
 
     @Override
     public ReviewDTO create(ReviewDTO reviewDto) {
-        Review review = reviewConverter.fromDTO(reviewDto);
+        Review review = reviewConverter.convertToEntity(reviewDto);
         Review savedReview = reviewRepository.save(review);
-        return reviewConverter.toDTO(savedReview);
+        return reviewConverter.convertToDTO(savedReview);
     }
 
     @Override
     public ReviewDTO get(Long id) {
         Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Review with id " + id + " not found"));
-        return reviewConverter.toDTO(review);
+        return reviewConverter.convertToDTO(review);
     }
 
     @Override
     public List<ReviewDTO> getAll() {
         List<Review> reviews = reviewRepository.findAll();
-        return reviews.stream().map(reviewConverter::toDTO).collect(Collectors.toList());
+        return reviews.stream().map(reviewConverter::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
     public ReviewDTO update(Long id, ReviewDTO updatedReviewDto) {
         validateIds(id, updatedReviewDto);
         Review existingReview = findReviewById(id);
-        Review updatedReview = reviewConverter.fromDTO(updatedReviewDto);
+        Review updatedReview = reviewConverter.convertToEntity(updatedReviewDto);
         updateReviewFields(existingReview, updatedReview);
         Review savedReview = reviewRepository.save(existingReview);
-        return reviewConverter.toDTO(savedReview);
+        return reviewConverter.convertToDTO(savedReview);
     }
 
     private void validateIds(Long id, ReviewDTO updatedReviewDto) {

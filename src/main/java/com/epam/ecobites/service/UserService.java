@@ -24,9 +24,9 @@ public class UserService implements CrudService<EcoUserDTO, Long> {
         if (userDto == null) {
             throw new IllegalArgumentException("userDTO cannot be null");
         }
-        EcoUser user = userConverter.fromDTO(userDto);
+        EcoUser user = userConverter.convertToEntity(userDto);
         EcoUser savedUser = ecoUserRepository.save(user);
-        return userConverter.toDTO(savedUser);
+        return userConverter.convertToDTO(savedUser);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class UserService implements CrudService<EcoUserDTO, Long> {
         }
         EcoUser user = ecoUserRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
-        return userConverter.toDTO(user);
+        return userConverter.convertToDTO(user);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class UserService implements CrudService<EcoUserDTO, Long> {
         if (users.isEmpty()) {
             throw new NotFoundException("No users found");
         }
-        return users.stream().map(userConverter::toDTO).collect(Collectors.toList());
+        return users.stream().map(userConverter::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
@@ -58,10 +58,10 @@ public class UserService implements CrudService<EcoUserDTO, Long> {
         }
         validateIds(id, updatedUserDto);
         EcoUser existingUser = findUserById(id);
-        EcoUser updatedUser = userConverter.fromDTO(updatedUserDto);
+        EcoUser updatedUser = userConverter.convertToEntity(updatedUserDto);
         updateUserFields(existingUser, updatedUser);
         EcoUser savedUser = ecoUserRepository.save(existingUser);
-        return userConverter.toDTO(savedUser);
+        return userConverter.convertToDTO(savedUser);
     }
 
     private void validateIds(Long id, EcoUserDTO updatedUserDto) {

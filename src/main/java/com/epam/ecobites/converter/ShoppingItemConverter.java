@@ -24,7 +24,7 @@ public class ShoppingItemConverter implements EntityConverter<ShoppingItemDTO, S
     }
 
     @Override
-    public ShoppingItemDTO toDTO(ShoppingItem shoppingItem) {
+    public ShoppingItemDTO convertToDTO(ShoppingItem shoppingItem) {
         return ShoppingItemDTO.builder()
                 .id(shoppingItem.getId())
                 .recipeId(shoppingItem.getRecipe().getId())
@@ -34,7 +34,7 @@ public class ShoppingItemConverter implements EntityConverter<ShoppingItemDTO, S
     }
 
     @Override
-    public ShoppingItem fromDTO(ShoppingItemDTO shoppingItemDto) {
+    public ShoppingItem convertToEntity(ShoppingItemDTO shoppingItemDto) {
         Recipe recipe = recipeRepository.findById(shoppingItemDto.getRecipeId())
                 .orElseThrow(() -> new NotFoundException("Recipe with id " + shoppingItemDto.getRecipeId() + " not found"));
         Ingredient ingredient = ingredientRepository.findById(shoppingItemDto.getIngredientId())

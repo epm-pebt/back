@@ -22,32 +22,32 @@ public class RecipeService implements CrudService<RecipeDTO, Long> {
 
     @Override
     public RecipeDTO create(RecipeDTO recipeDto) {
-        Recipe recipe = recipeConverter.fromDTO(recipeDto);
+        Recipe recipe = recipeConverter.convertToEntity(recipeDto);
         Recipe savedRecipe = recipeRepository.save(recipe);
-        return recipeConverter.toDTO(savedRecipe);
+        return recipeConverter.convertToDTO(savedRecipe);
     }
 
     @Override
     public RecipeDTO get(Long id) {
         Recipe recipe = recipeRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Recipe with id " + id + " not found"));
-        return recipeConverter.toDTO(recipe);
+        return recipeConverter.convertToDTO(recipe);
     }
 
     @Override
     public List<RecipeDTO> getAll() {
         List<Recipe> recipes = recipeRepository.findAll();
-        return recipes.stream().map(recipeConverter::toDTO).collect(Collectors.toList());
+        return recipes.stream().map(recipeConverter::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
     public RecipeDTO update(Long id, RecipeDTO updatedRecipeDto) {
         validateIds(id, updatedRecipeDto);
         Recipe existingRecipe = findRecipeById(id);
-        Recipe updatedRecipe = recipeConverter.fromDTO(updatedRecipeDto);
+        Recipe updatedRecipe = recipeConverter.convertToEntity(updatedRecipeDto);
         updateRecipeFields(existingRecipe, updatedRecipe);
         Recipe savedRecipe = recipeRepository.save(existingRecipe);
-        return recipeConverter.toDTO(savedRecipe);
+        return recipeConverter.convertToDTO(savedRecipe);
     }
 
     private void validateIds(Long id, RecipeDTO updatedRecipeDto) {

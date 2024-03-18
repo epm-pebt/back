@@ -22,32 +22,32 @@ public class IngredientDetailService implements CrudService<IngredientDetailDTO,
 
     @Override
     public IngredientDetailDTO create(IngredientDetailDTO ingredientDetailDto) {
-        IngredientDetail ingredientDetail = ingredientDetailConverter.fromDTO(ingredientDetailDto);
+        IngredientDetail ingredientDetail = ingredientDetailConverter.convertToEntity(ingredientDetailDto);
         IngredientDetail savedIngredientDetail = ingredientDetailRepository.save(ingredientDetail);
-        return ingredientDetailConverter.toDTO(savedIngredientDetail);
+        return ingredientDetailConverter.convertToDTO(savedIngredientDetail);
     }
 
     @Override
     public IngredientDetailDTO get(Long id) {
         IngredientDetail ingredientDetail = ingredientDetailRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("IngredientDetail with id " + id + " not found"));
-        return ingredientDetailConverter.toDTO(ingredientDetail);
+        return ingredientDetailConverter.convertToDTO(ingredientDetail);
     }
 
     @Override
     public List<IngredientDetailDTO> getAll() {
         List<IngredientDetail> ingredientDetails = ingredientDetailRepository.findAll();
-        return ingredientDetails.stream().map(ingredientDetailConverter::toDTO).collect(Collectors.toList());
+        return ingredientDetails.stream().map(ingredientDetailConverter::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
     public IngredientDetailDTO update(Long id, IngredientDetailDTO updatedIngredientDetailDto) {
         validateIds(id, updatedIngredientDetailDto);
         IngredientDetail existingIngredientDetail = findIngredientDetailById(id);
-        IngredientDetail updatedIngredientDetail = ingredientDetailConverter.fromDTO(updatedIngredientDetailDto);
+        IngredientDetail updatedIngredientDetail = ingredientDetailConverter.convertToEntity(updatedIngredientDetailDto);
         updateIngredientDetailFields(existingIngredientDetail, updatedIngredientDetail);
         IngredientDetail savedIngredientDetail = ingredientDetailRepository.save(existingIngredientDetail);
-        return ingredientDetailConverter.toDTO(savedIngredientDetail);
+        return ingredientDetailConverter.convertToDTO(savedIngredientDetail);
     }
 
     private void validateIds(Long id, IngredientDetailDTO updatedIngredientDetailDto) {

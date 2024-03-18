@@ -20,7 +20,7 @@ public class ReviewConverter implements EntityConverter<ReviewDTO, Review> {
     }
 
     @Override
-    public ReviewDTO toDTO(Review review) {
+    public ReviewDTO convertToDTO(Review review) {
         return ReviewDTO.builder()
                 .id(review.getId())
                 .rate(review.getRate())
@@ -32,7 +32,7 @@ public class ReviewConverter implements EntityConverter<ReviewDTO, Review> {
     }
 
     @Override
-    public Review fromDTO(ReviewDTO reviewDto) {
+    public Review convertToEntity(ReviewDTO reviewDto) {
         EcoUser ecoUser = ecoUserRepository.findById(reviewDto.getEcoUserId())
                 .orElseThrow(() -> new NotFoundException("User with id " + reviewDto.getEcoUserId() + " not found"));
         Recipe recipe = recipeRepository.findById(reviewDto.getRecipeId())

@@ -22,32 +22,32 @@ public class RecipeStepService implements CrudService<RecipeStepDTO, Long> {
 
     @Override
     public RecipeStepDTO create(RecipeStepDTO recipeStepDto) {
-        RecipeStep recipeStep = recipeStepConverter.fromDTO(recipeStepDto);
+        RecipeStep recipeStep = recipeStepConverter.convertToEntity(recipeStepDto);
         RecipeStep savedRecipeStep = recipeStepRepository.save(recipeStep);
-        return recipeStepConverter.toDTO(savedRecipeStep);
+        return recipeStepConverter.convertToDTO(savedRecipeStep);
     }
 
     @Override
     public RecipeStepDTO get(Long id) {
         RecipeStep recipeStep = recipeStepRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("RecipeStep with id " + id + " not found"));
-        return recipeStepConverter.toDTO(recipeStep);
+        return recipeStepConverter.convertToDTO(recipeStep);
     }
 
     @Override
     public List<RecipeStepDTO> getAll() {
         List<RecipeStep> recipeSteps = recipeStepRepository.findAll();
-        return recipeSteps.stream().map(recipeStepConverter::toDTO).collect(Collectors.toList());
+        return recipeSteps.stream().map(recipeStepConverter::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
     public RecipeStepDTO update(Long id, RecipeStepDTO updatedRecipeStepDto) {
         validateIds(id, updatedRecipeStepDto);
         RecipeStep existingRecipeStep = findRecipeStepById(id);
-        RecipeStep updatedRecipeStep = recipeStepConverter.fromDTO(updatedRecipeStepDto);
+        RecipeStep updatedRecipeStep = recipeStepConverter.convertToEntity(updatedRecipeStepDto);
         updateRecipeStepFields(existingRecipeStep, updatedRecipeStep);
         RecipeStep savedRecipeStep = recipeStepRepository.save(existingRecipeStep);
-        return recipeStepConverter.toDTO(savedRecipeStep);
+        return recipeStepConverter.convertToDTO(savedRecipeStep);
     }
 
     private void validateIds(Long id, RecipeStepDTO updatedRecipeStepDto) {

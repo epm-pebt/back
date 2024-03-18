@@ -22,32 +22,32 @@ public class IngredientService implements CrudService<IngredientDTO, Long> {
 
     @Override
     public IngredientDTO create(IngredientDTO ingredientDto) {
-        Ingredient ingredient = ingredientConverter.fromDTO(ingredientDto);
+        Ingredient ingredient = ingredientConverter.convertToEntity(ingredientDto);
         Ingredient savedIngredient = ingredientRepository.save(ingredient);
-        return ingredientConverter.toDTO(savedIngredient);
+        return ingredientConverter.convertToDTO(savedIngredient);
     }
 
     @Override
     public IngredientDTO get(Long id) {
         Ingredient ingredient = ingredientRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Ingredient with id " + id + " not found"));
-        return ingredientConverter.toDTO(ingredient);
+        return ingredientConverter.convertToDTO(ingredient);
     }
 
     @Override
     public List<IngredientDTO> getAll() {
         List<Ingredient> ingredients = ingredientRepository.findAll();
-        return ingredients.stream().map(ingredientConverter::toDTO).collect(Collectors.toList());
+        return ingredients.stream().map(ingredientConverter::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
     public IngredientDTO update(Long id, IngredientDTO updatedIngredientDto) {
         validateIds(id, updatedIngredientDto);
         Ingredient existingIngredient = findIngredientById(id);
-        Ingredient updatedIngredient = ingredientConverter.fromDTO(updatedIngredientDto);
+        Ingredient updatedIngredient = ingredientConverter.convertToEntity(updatedIngredientDto);
         updateIngredientFields(existingIngredient, updatedIngredient);
         Ingredient savedIngredient = ingredientRepository.save(existingIngredient);
-        return ingredientConverter.toDTO(savedIngredient);
+        return ingredientConverter.convertToDTO(savedIngredient);
     }
 
     private void validateIds(Long id, IngredientDTO updatedIngredientDto) {

@@ -5,7 +5,7 @@ import com.epam.ecobites.dto.IngredientDetailDTO;
 
 public class IngredientDetailConverter implements EntityConverter<IngredientDetailDTO, IngredientDetail> {
     @Override
-    public IngredientDetailDTO toDTO(IngredientDetail ingredientDetail) {
+    public IngredientDetailDTO convertToDTO(IngredientDetail ingredientDetail) {
         return IngredientDetailDTO.builder()
                 .id(ingredientDetail.getId())
                 .quantity(ingredientDetail.getQuantity())
@@ -14,7 +14,7 @@ public class IngredientDetailConverter implements EntityConverter<IngredientDeta
     }
 
     @Override
-    public IngredientDetail fromDTO(IngredientDetailDTO ingredientDetailDto) {
+    public IngredientDetail convertToEntity(IngredientDetailDTO ingredientDetailDto) {
         IngredientDetail ingredientDetail = new IngredientDetail();
         ingredientDetail.setId(ingredientDetailDto.getId());
         ingredientDetail.setQuantity(ingredientDetailDto.getQuantity());

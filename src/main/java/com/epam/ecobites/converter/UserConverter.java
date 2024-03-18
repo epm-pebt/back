@@ -5,7 +5,7 @@ import com.epam.ecobites.dto.EcoUserDTO;
 
 public class UserConverter implements EntityConverter<EcoUserDTO, EcoUser> {
     @Override
-    public EcoUserDTO toDTO(EcoUser user) {
+    public EcoUserDTO convertToDTO(EcoUser user) {
         return EcoUserDTO.builder()
                 .id(user.getId())
                 .username(user.getUsername())
@@ -16,7 +16,7 @@ public class UserConverter implements EntityConverter<EcoUserDTO, EcoUser> {
     }
 
     @Override
-    public EcoUser fromDTO(EcoUserDTO userDTO) {
+    public EcoUser convertToEntity(EcoUserDTO userDTO) {
         EcoUser user = new EcoUser();
         user.setId(userDTO.getId());
         user.setUsername(userDTO.getUsername());

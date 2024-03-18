@@ -22,32 +22,32 @@ public class ShoppingItemService implements CrudService<ShoppingItemDTO, Long> {
 
     @Override
     public ShoppingItemDTO create(ShoppingItemDTO shoppingItemDto) {
-        ShoppingItem shoppingItem = shoppingItemConverter.fromDTO(shoppingItemDto);
+        ShoppingItem shoppingItem = shoppingItemConverter.convertToEntity(shoppingItemDto);
         ShoppingItem savedShoppingItem = shoppingItemRepository.save(shoppingItem);
-        return shoppingItemConverter.toDTO(savedShoppingItem);
+        return shoppingItemConverter.convertToDTO(savedShoppingItem);
     }
 
     @Override
     public ShoppingItemDTO get(Long id) {
         ShoppingItem shoppingItem = shoppingItemRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("ShoppingItem with id " + id + " not found"));
-        return shoppingItemConverter.toDTO(shoppingItem);
+        return shoppingItemConverter.convertToDTO(shoppingItem);
     }
 
     @Override
     public List<ShoppingItemDTO> getAll() {
         List<ShoppingItem> shoppingItems = shoppingItemRepository.findAll();
-        return shoppingItems.stream().map(shoppingItemConverter::toDTO).collect(Collectors.toList());
+        return shoppingItems.stream().map(shoppingItemConverter::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
     public ShoppingItemDTO update(Long id, ShoppingItemDTO updatedShoppingItemDto) {
         validateIds(id, updatedShoppingItemDto);
         ShoppingItem existingShoppingItem = findShoppingItemById(id);
-        ShoppingItem updatedShoppingItem = shoppingItemConverter.fromDTO(updatedShoppingItemDto);
+        ShoppingItem updatedShoppingItem = shoppingItemConverter.convertToEntity(updatedShoppingItemDto);
         updateShoppingItemFields(existingShoppingItem, updatedShoppingItem);
         ShoppingItem savedShoppingItem = shoppingItemRepository.save(existingShoppingItem);
-        return shoppingItemConverter.toDTO(savedShoppingItem);
+        return shoppingItemConverter.convertToDTO(savedShoppingItem);
     }
 
     private void validateIds(Long id, ShoppingItemDTO updatedShoppingItemDto) {

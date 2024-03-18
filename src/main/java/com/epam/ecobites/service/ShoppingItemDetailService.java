@@ -22,32 +22,32 @@ public class ShoppingItemDetailService implements CrudService<ShoppingItemDetail
 
     @Override
     public ShoppingItemDetailDTO create(ShoppingItemDetailDTO shoppingItemDetailDto) {
-        ShoppingItemDetail shoppingItemDetail = shoppingItemDetailConverter.fromDTO(shoppingItemDetailDto);
+        ShoppingItemDetail shoppingItemDetail = shoppingItemDetailConverter.convertToEntity(shoppingItemDetailDto);
         ShoppingItemDetail savedShoppingItemDetail = shoppingItemDetailRepository.save(shoppingItemDetail);
-        return shoppingItemDetailConverter.toDTO(savedShoppingItemDetail);
+        return shoppingItemDetailConverter.convertToDTO(savedShoppingItemDetail);
     }
 
     @Override
     public ShoppingItemDetailDTO get(Long id) {
         ShoppingItemDetail shoppingItemDetail = shoppingItemDetailRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("ShoppingItemDetail with id " + id + " not found"));
-        return shoppingItemDetailConverter.toDTO(shoppingItemDetail);
+        return shoppingItemDetailConverter.convertToDTO(shoppingItemDetail);
     }
 
     @Override
     public List<ShoppingItemDetailDTO> getAll() {
         List<ShoppingItemDetail> shoppingItemDetails = shoppingItemDetailRepository.findAll();
-        return shoppingItemDetails.stream().map(shoppingItemDetailConverter::toDTO).collect(Collectors.toList());
+        return shoppingItemDetails.stream().map(shoppingItemDetailConverter::convertToDTO).collect(Collectors.toList());
     }
 
     @Override
     public ShoppingItemDetailDTO update(Long id, ShoppingItemDetailDTO updatedShoppingItemDetailDto) {
         validateIds(id, updatedShoppingItemDetailDto);
         ShoppingItemDetail existingShoppingItemDetail = findShoppingItemDetailById(id);
-        ShoppingItemDetail updatedShoppingItemDetail = shoppingItemDetailConverter.fromDTO(updatedShoppingItemDetailDto);
+        ShoppingItemDetail updatedShoppingItemDetail = shoppingItemDetailConverter.convertToEntity(updatedShoppingItemDetailDto);
         updateShoppingItemDetailFields(existingShoppingItemDetail, updatedShoppingItemDetail);
         ShoppingItemDetail savedShoppingItemDetail = shoppingItemDetailRepository.save(existingShoppingItemDetail);
-        return shoppingItemDetailConverter.toDTO(savedShoppingItemDetail);
+        return shoppingItemDetailConverter.convertToDTO(savedShoppingItemDetail);
     }
 
     private void validateIds(Long id, ShoppingItemDetailDTO updatedShoppingItemDetailDto) {

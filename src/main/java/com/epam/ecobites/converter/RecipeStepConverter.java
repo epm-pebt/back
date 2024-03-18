@@ -16,7 +16,7 @@ public class RecipeStepConverter implements EntityConverter<RecipeStepDTO, Recip
     }
 
     @Override
-    public RecipeStepDTO toDTO(RecipeStep recipeStep) {
+    public RecipeStepDTO convertToDTO(RecipeStep recipeStep) {
         return RecipeStepDTO.builder()
                 .id(recipeStep.getId())
                 .number(recipeStep.getNumber())
@@ -28,7 +28,7 @@ public class RecipeStepConverter implements EntityConverter<RecipeStepDTO, Recip
     }
 
     @Override
-    public RecipeStep fromDTO(RecipeStepDTO recipeStepDto) {
+    public RecipeStep convertToEntity(RecipeStepDTO recipeStepDto) {
         Recipe recipe = recipeRepository.findById(recipeStepDto.getRecipeId())
                 .orElseThrow(() -> new NotFoundException("Recipe with id " + recipeStepDto.getRecipeId() + " not found"));
 
