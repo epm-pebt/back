@@ -1,6 +1,7 @@
 package com.epam.ecobites.service;
 
-import com.epam.ecobites.converter.UserConverter;
+import com.epam.ecobites.converter.EcoUserConvertToDTO;
+import com.epam.ecobites.converter.EcoUserConvertToEntity;
 import com.epam.ecobites.data.EcoUserRepository;
 import com.epam.ecobites.domain.EcoUser;
 import com.epam.ecobites.dto.EcoUserDTO;
@@ -12,31 +13,29 @@ import java.util.stream.Collectors;
 @Service
 public class UserService implements CrudService<EcoUserDTO, Long> {
     private EcoUserRepository ecoUserRepository;
-    private UserConverter userConverter;
+    private EcoUserConvertToDTO ecoUserConvertToDTO;
+    private EcoUserConvertToEntity ecoUserConvertToEntity;
 
-    public UserService(EcoUserRepository ecoUserRepository, UserConverter userConverter) {
+    public UserService(EcoUserRepository ecoUserRepository, EcoUserConvertToDTO ecoUserConvertToDTO, EcoUserConvertToEntity ecoUserConvertToEntity) {
         this.ecoUserRepository = ecoUserRepository;
-        this.userConverter = userConverter;
+        this.ecoUserConvertToDTO = ecoUserConvertToDTO;
+        this.ecoUserConvertToEntity = ecoUserConvertToEntity;
     }
 
     @Override
     public EcoUserDTO create(EcoUserDTO userDto) {
-        if (userDto == null) {
-            throw new IllegalArgumentException("userDTO cannot be null");
-        }
-        EcoUser user = userConverter.convertToEntity(userDto);
+        nullCheck(userDto);
+        EcoUser user = ecoUserConvertToEntity.convert(userDto);
         EcoUser savedUser = ecoUserRepository.save(user);
-        return userConverter.convertToDTO(savedUser);
+        return ecoUserConvertToDTO.convert(savedUser);
     }
 
     @Override
-    public EcoUserDTO get(Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException("id cannot be null");
-        }
+    public EcoUserDTO getById(Long id) {
+        nullCheck(id);
         EcoUser user = ecoUserRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
-        return userConverter.convertToDTO(user);
+        return ecoUserConvertToDTO.convert(user);
     }
 
     @Override
@@ -45,23 +44,19 @@ public class UserService implements CrudService<EcoUserDTO, Long> {
         if (users.isEmpty()) {
             throw new NotFoundException("No users found");
         }
-        return users.stream().map(userConverter::convertToDTO).collect(Collectors.toList());
+        return users.stream().map(ecoUserConvertToDTO::convert).collect(Collectors.toList());
     }
 
     @Override
     public EcoUserDTO update(Long id, EcoUserDTO updatedUserDto) {
-        if (id == null || id <=0 ) {
-            throw new IllegalArgumentException("id must be positive");
-        }
-        if (updatedUserDto == null) {
-            throw new IllegalArgumentException("updatedUserDto cannot be null");
-        }
+        nullCheck(id);
+        nullCheck(updatedUserDto);
         validateIds(id, updatedUserDto);
         EcoUser existingUser = findUserById(id);
-        EcoUser updatedUser = userConverter.convertToEntity(updatedUserDto);
+        EcoUser updatedUser = ecoUserConvertToEntity.convert(updatedUserDto);
         updateUserFields(existingUser, updatedUser);
         EcoUser savedUser = ecoUserRepository.save(existingUser);
-        return userConverter.convertToDTO(savedUser);
+        return ecoUserConvertToDTO.convert(savedUser);
     }
 
     private void validateIds(Long id, EcoUserDTO updatedUserDto) {
@@ -87,10 +82,17 @@ public class UserService implements CrudService<EcoUserDTO, Long> {
 
     @Override
     public void delete(Long id) {
+        nullCheck(id);
         if (ecoUserRepository.existsById(id)) {
             ecoUserRepository.deleteById(id);
         } else {
             throw new NotFoundException("User with id " + id + " not found");
+        }
+    }
+
+    private void nullCheck(Object obj) {
+        if (obj == null) {
+            throw new IllegalArgumentException("argument cannot be null");
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.epam.ecobites.service;
 
-import com.epam.ecobites.converter.IngredientConverter;
+import com.epam.ecobites.converter.IngredientConvertToDTO;
+import com.epam.ecobites.converter.IngredientConvertToEntity;
 import com.epam.ecobites.data.IngredientRepository;
 import com.epam.ecobites.domain.Ingredient;
 import com.epam.ecobites.dto.IngredientDTO;
@@ -13,41 +14,47 @@ import java.util.stream.Collectors;
 @Service
 public class IngredientService implements CrudService<IngredientDTO, Long> {
     private IngredientRepository ingredientRepository;
-    private IngredientConverter ingredientConverter;
+    private IngredientConvertToDTO convertToDTO;
+    private IngredientConvertToEntity convertToEntity;
 
-    public IngredientService(IngredientRepository ingredientRepository, IngredientConverter ingredientConverter) {
+    public IngredientService(IngredientRepository ingredientRepository, IngredientConvertToDTO convertToDTO, IngredientConvertToEntity ingredientConvertToEntity) {
         this.ingredientRepository = ingredientRepository;
-        this.ingredientConverter = ingredientConverter;
+        this.convertToDTO = convertToDTO;
+        this.convertToEntity = ingredientConvertToEntity;
     }
 
     @Override
     public IngredientDTO create(IngredientDTO ingredientDto) {
-        Ingredient ingredient = ingredientConverter.convertToEntity(ingredientDto);
+        nullCheck(ingredientDto);
+        Ingredient ingredient = convertToEntity.convert(ingredientDto);
         Ingredient savedIngredient = ingredientRepository.save(ingredient);
-        return ingredientConverter.convertToDTO(savedIngredient);
+        return convertToDTO.convert(savedIngredient);
     }
 
     @Override
-    public IngredientDTO get(Long id) {
+    public IngredientDTO getById(Long id) {
+        nullCheck(id);
         Ingredient ingredient = ingredientRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Ingredient with id " + id + " not found"));
-        return ingredientConverter.convertToDTO(ingredient);
+        return convertToDTO.convert(ingredient);
     }
 
     @Override
     public List<IngredientDTO> getAll() {
         List<Ingredient> ingredients = ingredientRepository.findAll();
-        return ingredients.stream().map(ingredientConverter::convertToDTO).collect(Collectors.toList());
+        return ingredients.stream().map(convertToDTO::convert).collect(Collectors.toList());
     }
 
     @Override
     public IngredientDTO update(Long id, IngredientDTO updatedIngredientDto) {
+        nullCheck(id);
+        nullCheck(updatedIngredientDto);
         validateIds(id, updatedIngredientDto);
         Ingredient existingIngredient = findIngredientById(id);
-        Ingredient updatedIngredient = ingredientConverter.convertToEntity(updatedIngredientDto);
+        Ingredient updatedIngredient = convertToEntity.convert(updatedIngredientDto);
         updateIngredientFields(existingIngredient, updatedIngredient);
         Ingredient savedIngredient = ingredientRepository.save(existingIngredient);
-        return ingredientConverter.convertToDTO(savedIngredient);
+        return convertToDTO.convert(savedIngredient);
     }
 
     private void validateIds(Long id, IngredientDTO updatedIngredientDto) {
@@ -67,9 +74,16 @@ public class IngredientService implements CrudService<IngredientDTO, Long> {
 
     @Override
     public void delete(Long id) {
+        nullCheck(id);
         if (!ingredientRepository.existsById(id)) {
             throw new NotFoundException("Ingredient with id " + id + " not found");
         }
         ingredientRepository.deleteById(id);
+    }
+
+    private void nullCheck(Object obj) {
+        if (obj == null) {
+            throw new IllegalArgumentException("argument cannot be null");
+        }
     }
 }

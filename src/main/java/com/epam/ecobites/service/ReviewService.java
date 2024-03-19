@@ -1,6 +1,7 @@
 package com.epam.ecobites.service;
 
-import com.epam.ecobites.converter.ReviewConverter;
+import com.epam.ecobites.converter.ReviewConvertToDTO;
+import com.epam.ecobites.converter.ReviewConvertToEntity;
 import com.epam.ecobites.data.ReviewRepository;
 import com.epam.ecobites.domain.Review;
 import com.epam.ecobites.dto.ReviewDTO;
@@ -13,41 +14,47 @@ import java.util.stream.Collectors;
 @Service
 public class ReviewService implements CrudService<ReviewDTO, Long> {
     private ReviewRepository reviewRepository;
-    private ReviewConverter reviewConverter;
+    private ReviewConvertToDTO convertToDTO;
+    private ReviewConvertToEntity convertToEntity;
 
-    public ReviewService(ReviewRepository reviewRepository, ReviewConverter reviewConverter) {
+    public ReviewService(ReviewRepository reviewRepository, ReviewConvertToDTO convertToDTO, ReviewConvertToEntity convertToEntity) {
         this.reviewRepository = reviewRepository;
-        this.reviewConverter = reviewConverter;
+        this.convertToDTO = convertToDTO;
+        this.convertToEntity = convertToEntity;
     }
 
     @Override
     public ReviewDTO create(ReviewDTO reviewDto) {
-        Review review = reviewConverter.convertToEntity(reviewDto);
+        nullCheck(reviewDto);
+        Review review = convertToEntity.convert(reviewDto);
         Review savedReview = reviewRepository.save(review);
-        return reviewConverter.convertToDTO(savedReview);
+        return convertToDTO.convert(savedReview);
     }
 
     @Override
-    public ReviewDTO get(Long id) {
+    public ReviewDTO getById(Long id) {
+        nullCheck(id);
         Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Review with id " + id + " not found"));
-        return reviewConverter.convertToDTO(review);
+        return convertToDTO.convert(review);
     }
 
     @Override
     public List<ReviewDTO> getAll() {
         List<Review> reviews = reviewRepository.findAll();
-        return reviews.stream().map(reviewConverter::convertToDTO).collect(Collectors.toList());
+        return reviews.stream().map(convertToDTO::convert).collect(Collectors.toList());
     }
 
     @Override
     public ReviewDTO update(Long id, ReviewDTO updatedReviewDto) {
+        nullCheck(id);
+        nullCheck(updatedReviewDto);
         validateIds(id, updatedReviewDto);
         Review existingReview = findReviewById(id);
-        Review updatedReview = reviewConverter.convertToEntity(updatedReviewDto);
+        Review updatedReview = convertToEntity.convert(updatedReviewDto);
         updateReviewFields(existingReview, updatedReview);
         Review savedReview = reviewRepository.save(existingReview);
-        return reviewConverter.convertToDTO(savedReview);
+        return convertToDTO.convert(savedReview);
     }
 
     private void validateIds(Long id, ReviewDTO updatedReviewDto) {
@@ -71,9 +78,16 @@ public class ReviewService implements CrudService<ReviewDTO, Long> {
 
     @Override
     public void delete(Long id) {
+        nullCheck(id);
         if (!reviewRepository.existsById(id)) {
             throw new NotFoundException("Review with id " + id + " not found");
         }
         reviewRepository.deleteById(id);
+    }
+
+    private void nullCheck(Object obj) {
+        if (obj == null) {
+            throw new IllegalArgumentException("argument cannot be null");
+        }
     }
 }

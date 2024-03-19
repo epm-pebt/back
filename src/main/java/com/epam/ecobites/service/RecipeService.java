@@ -1,6 +1,7 @@
 package com.epam.ecobites.service;
 
-import com.epam.ecobites.converter.RecipeConverter;
+import com.epam.ecobites.converter.RecipeConvertToDTO;
+import com.epam.ecobites.converter.RecipeConvertToEntity;
 import com.epam.ecobites.data.RecipeRepository;
 import com.epam.ecobites.domain.Recipe;
 import com.epam.ecobites.dto.RecipeDTO;
@@ -13,41 +14,47 @@ import java.util.stream.Collectors;
 @Service
 public class RecipeService implements CrudService<RecipeDTO, Long> {
     private RecipeRepository recipeRepository;
-    private RecipeConverter recipeConverter;
+    private RecipeConvertToDTO convertToDTO;
+    private RecipeConvertToEntity convertToEntity;
 
-    public RecipeService(RecipeRepository recipeRepository, RecipeConverter recipeConverter) {
+    public RecipeService(RecipeRepository recipeRepository, RecipeConvertToDTO convertToDTO, RecipeConvertToEntity convertToEntity) {
         this.recipeRepository = recipeRepository;
-        this.recipeConverter = recipeConverter;
+        this.convertToDTO = convertToDTO;
+        this.convertToEntity = convertToEntity;
     }
 
     @Override
     public RecipeDTO create(RecipeDTO recipeDto) {
-        Recipe recipe = recipeConverter.convertToEntity(recipeDto);
+        nullCheck(recipeDto);
+        Recipe recipe = convertToEntity.convert(recipeDto);
         Recipe savedRecipe = recipeRepository.save(recipe);
-        return recipeConverter.convertToDTO(savedRecipe);
+        return convertToDTO.convert(savedRecipe);
     }
 
     @Override
-    public RecipeDTO get(Long id) {
+    public RecipeDTO getById(Long id) {
+        nullCheck(id);
         Recipe recipe = recipeRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Recipe with id " + id + " not found"));
-        return recipeConverter.convertToDTO(recipe);
+        return convertToDTO.convert(recipe);
     }
 
     @Override
     public List<RecipeDTO> getAll() {
         List<Recipe> recipes = recipeRepository.findAll();
-        return recipes.stream().map(recipeConverter::convertToDTO).collect(Collectors.toList());
+        return recipes.stream().map(convertToDTO::convert).collect(Collectors.toList());
     }
 
     @Override
     public RecipeDTO update(Long id, RecipeDTO updatedRecipeDto) {
+        nullCheck(id);
+        nullCheck(updatedRecipeDto);
         validateIds(id, updatedRecipeDto);
         Recipe existingRecipe = findRecipeById(id);
-        Recipe updatedRecipe = recipeConverter.convertToEntity(updatedRecipeDto);
+        Recipe updatedRecipe = convertToEntity.convert(updatedRecipeDto);
         updateRecipeFields(existingRecipe, updatedRecipe);
         Recipe savedRecipe = recipeRepository.save(existingRecipe);
-        return recipeConverter.convertToDTO(savedRecipe);
+        return convertToDTO.convert(savedRecipe);
     }
 
     private void validateIds(Long id, RecipeDTO updatedRecipeDto) {
@@ -72,9 +79,16 @@ public class RecipeService implements CrudService<RecipeDTO, Long> {
 
     @Override
     public void delete(Long id) {
+        nullCheck(id);
         if (!recipeRepository.existsById(id)) {
             throw new NotFoundException("Recipe with id " + id + " not found");
         }
         recipeRepository.deleteById(id);
+    }
+
+    private void nullCheck(Object obj) {
+        if (obj == null) {
+            throw new IllegalArgumentException("argument cannot be null");
+        }
     }
 }

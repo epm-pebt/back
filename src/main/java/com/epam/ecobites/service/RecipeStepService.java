@@ -1,6 +1,7 @@
 package com.epam.ecobites.service;
 
-import com.epam.ecobites.converter.RecipeStepConverter;
+import com.epam.ecobites.converter.RecipeStepConvertToDTO;
+import com.epam.ecobites.converter.RecipeStepConvertToEntity;
 import com.epam.ecobites.data.RecipeStepRepository;
 import com.epam.ecobites.domain.RecipeStep;
 import com.epam.ecobites.dto.RecipeStepDTO;
@@ -13,41 +14,47 @@ import java.util.stream.Collectors;
 @Service
 public class RecipeStepService implements CrudService<RecipeStepDTO, Long> {
     private RecipeStepRepository recipeStepRepository;
-    private RecipeStepConverter recipeStepConverter;
+    private RecipeStepConvertToDTO convertToDTO;
+    private RecipeStepConvertToEntity convertToEntity;
 
-    public RecipeStepService(RecipeStepRepository recipeStepRepository, RecipeStepConverter recipeStepConverter) {
+    public RecipeStepService(RecipeStepRepository recipeStepRepository, RecipeStepConvertToDTO convertToDTO, RecipeStepConvertToEntity convertToEntity) {
         this.recipeStepRepository = recipeStepRepository;
-        this.recipeStepConverter = recipeStepConverter;
+        this.convertToDTO = convertToDTO;
+        this.convertToEntity = convertToEntity;
     }
 
     @Override
     public RecipeStepDTO create(RecipeStepDTO recipeStepDto) {
-        RecipeStep recipeStep = recipeStepConverter.convertToEntity(recipeStepDto);
+        nullCheck(recipeStepDto);
+        RecipeStep recipeStep = convertToEntity.convert(recipeStepDto);
         RecipeStep savedRecipeStep = recipeStepRepository.save(recipeStep);
-        return recipeStepConverter.convertToDTO(savedRecipeStep);
+        return convertToDTO.convert(savedRecipeStep);
     }
 
     @Override
-    public RecipeStepDTO get(Long id) {
+    public RecipeStepDTO getById(Long id) {
+        nullCheck(id);
         RecipeStep recipeStep = recipeStepRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("RecipeStep with id " + id + " not found"));
-        return recipeStepConverter.convertToDTO(recipeStep);
+        return convertToDTO.convert(recipeStep);
     }
 
     @Override
     public List<RecipeStepDTO> getAll() {
         List<RecipeStep> recipeSteps = recipeStepRepository.findAll();
-        return recipeSteps.stream().map(recipeStepConverter::convertToDTO).collect(Collectors.toList());
+        return recipeSteps.stream().map(convertToDTO::convert).collect(Collectors.toList());
     }
 
     @Override
     public RecipeStepDTO update(Long id, RecipeStepDTO updatedRecipeStepDto) {
+        nullCheck(id);
+        nullCheck(updatedRecipeStepDto);
         validateIds(id, updatedRecipeStepDto);
         RecipeStep existingRecipeStep = findRecipeStepById(id);
-        RecipeStep updatedRecipeStep = recipeStepConverter.convertToEntity(updatedRecipeStepDto);
+        RecipeStep updatedRecipeStep = convertToEntity.convert(updatedRecipeStepDto);
         updateRecipeStepFields(existingRecipeStep, updatedRecipeStep);
         RecipeStep savedRecipeStep = recipeStepRepository.save(existingRecipeStep);
-        return recipeStepConverter.convertToDTO(savedRecipeStep);
+        return convertToDTO.convert(savedRecipeStep);
     }
 
     private void validateIds(Long id, RecipeStepDTO updatedRecipeStepDto) {
@@ -71,9 +78,16 @@ public class RecipeStepService implements CrudService<RecipeStepDTO, Long> {
 
     @Override
     public void delete(Long id) {
+        nullCheck(id);
         if (!recipeStepRepository.existsById(id)) {
             throw new NotFoundException("RecipeStep with id " + id + " not found");
         }
         recipeStepRepository.deleteById(id);
+    }
+
+    private void nullCheck(Object obj) {
+        if (obj == null) {
+            throw new IllegalArgumentException("argument cannot be null");
+        }
     }
 }

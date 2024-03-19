@@ -1,6 +1,7 @@
 package com.epam.ecobites.service;
 
-import com.epam.ecobites.converter.RecipeIngredientConverter;
+import com.epam.ecobites.converter.RecipeIngredientConvertToDTO;
+import com.epam.ecobites.converter.RecipeIngredientConvertToEntity;
 import com.epam.ecobites.data.RecipeIngredientRepository;
 import com.epam.ecobites.domain.RecipeIngredient;
 import com.epam.ecobites.dto.RecipeIngredientDTO;
@@ -13,41 +14,47 @@ import java.util.stream.Collectors;
 @Service
 public class RecipeIngredientService implements CrudService<RecipeIngredientDTO, Long> {
     private RecipeIngredientRepository recipeIngredientRepository;
-    private RecipeIngredientConverter recipeIngredientConverter;
+    private RecipeIngredientConvertToDTO convertToDTO;
+    private RecipeIngredientConvertToEntity convertToEntity;
 
-    public RecipeIngredientService(RecipeIngredientRepository recipeIngredientRepository, RecipeIngredientConverter recipeIngredientConverter) {
+    public RecipeIngredientService(RecipeIngredientRepository recipeIngredientRepository, RecipeIngredientConvertToDTO convertToDTO, RecipeIngredientConvertToEntity convertToEntity) {
         this.recipeIngredientRepository = recipeIngredientRepository;
-        this.recipeIngredientConverter = recipeIngredientConverter;
+        this.convertToDTO = convertToDTO;
+        this.convertToEntity = convertToEntity;
     }
 
     @Override
     public RecipeIngredientDTO create(RecipeIngredientDTO recipeIngredientDto) {
-        RecipeIngredient recipeIngredient = recipeIngredientConverter.convertToEntity(recipeIngredientDto);
+        nullCheck(recipeIngredientDto);
+        RecipeIngredient recipeIngredient = convertToEntity.convert(recipeIngredientDto);
         RecipeIngredient savedRecipeIngredient = recipeIngredientRepository.save(recipeIngredient);
-        return recipeIngredientConverter.convertToDTO(savedRecipeIngredient);
+        return convertToDTO.convert(savedRecipeIngredient);
     }
 
     @Override
-    public RecipeIngredientDTO get(Long id) {
+    public RecipeIngredientDTO getById(Long id) {
+        nullCheck(id);
         RecipeIngredient recipeIngredient = recipeIngredientRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("RecipeIngredient with id " + id + " not found"));
-        return recipeIngredientConverter.convertToDTO(recipeIngredient);
+        return convertToDTO.convert(recipeIngredient);
     }
 
     @Override
     public List<RecipeIngredientDTO> getAll() {
         List<RecipeIngredient> recipeIngredients = recipeIngredientRepository.findAll();
-        return recipeIngredients.stream().map(recipeIngredientConverter::convertToDTO).collect(Collectors.toList());
+        return recipeIngredients.stream().map(convertToDTO::convert).collect(Collectors.toList());
     }
 
     @Override
     public RecipeIngredientDTO update(Long id, RecipeIngredientDTO updatedRecipeIngredientDto) {
+        nullCheck(id);
+        nullCheck(updatedRecipeIngredientDto);
         validateIds(id, updatedRecipeIngredientDto);
         RecipeIngredient existingRecipeIngredient = findRecipeIngredientById(id);
-        RecipeIngredient updatedRecipeIngredient = recipeIngredientConverter.convertToEntity(updatedRecipeIngredientDto);
+        RecipeIngredient updatedRecipeIngredient = convertToEntity.convert(updatedRecipeIngredientDto);
         updateRecipeIngredientFields(existingRecipeIngredient, updatedRecipeIngredient);
         RecipeIngredient savedRecipeIngredient = recipeIngredientRepository.save(existingRecipeIngredient);
-        return recipeIngredientConverter.convertToDTO(savedRecipeIngredient);
+        return convertToDTO.convert(savedRecipeIngredient);
     }
 
     private void validateIds(Long id, RecipeIngredientDTO updatedRecipeIngredientDto) {
@@ -69,9 +76,16 @@ public class RecipeIngredientService implements CrudService<RecipeIngredientDTO,
 
     @Override
     public void delete(Long id) {
+        nullCheck(id);
         if (!recipeIngredientRepository.existsById(id)) {
             throw new NotFoundException("RecipeIngredient with id " + id + " not found");
         }
         recipeIngredientRepository.deleteById(id);
+    }
+
+    private void nullCheck(Object obj) {
+        if (obj == null) {
+            throw new IllegalArgumentException("argument cannot be null");
+        }
     }
 }
