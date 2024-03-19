@@ -9,7 +9,7 @@ import java.util.Date;
 @Service
 public class JwtService {
     private final SecretKey key = Jwts.SIG.HS512.key().build();
-    private final long expirationTimeMillis = 10 * 60 * 1000;
+    private final long expirationTimeMillis = 60 * 60 * 1000;
 
     public String buildJwt(String subject) {
         return Jwts.builder()
