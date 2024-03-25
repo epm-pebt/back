@@ -1,16 +1,14 @@
 package com.epam.ecobites.service;
 
-import com.epam.ecobites.converter.IngredientConvertToDTO;
-import com.epam.ecobites.converter.IngredientConvertToEntity;
+import com.epam.ecobites.domain.converter.IngredientConvertToDTO;
+import com.epam.ecobites.domain.converter.IngredientConvertToEntity;
 import com.epam.ecobites.data.IngredientRepository;
 import com.epam.ecobites.domain.Ingredient;
-import com.epam.ecobites.dto.IngredientDTO;
+import com.epam.ecobites.domain.dto.IngredientDTO;
 import com.epam.ecobites.exception.NotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;

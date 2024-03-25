@@ -1,10 +1,7 @@
-package com.epam.ecobites.converter;
+package com.epam.ecobites.domain.converter;
 
-import com.epam.ecobites.data.IngredientDetailRepository;
-import com.epam.ecobites.data.IngredientRepository;
-import com.epam.ecobites.data.RecipeRepository;
 import com.epam.ecobites.domain.RecipeIngredient;
-import com.epam.ecobites.dto.RecipeIngredientDTO;
+import com.epam.ecobites.domain.dto.RecipeIngredientDTO;
 import org.springframework.core.convert.converter.Converter;
 
 public class RecipeIngredientConvertToDTO implements Converter<RecipeIngredient, RecipeIngredientDTO> {

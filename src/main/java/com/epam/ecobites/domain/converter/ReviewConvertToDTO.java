@@ -1,7 +1,7 @@
-package com.epam.ecobites.converter;
+package com.epam.ecobites.domain.converter;
 
 import com.epam.ecobites.domain.Review;
-import com.epam.ecobites.dto.ReviewDTO;
+import com.epam.ecobites.domain.dto.ReviewDTO;
 import org.springframework.core.convert.converter.Converter;
 
 public class ReviewConvertToDTO implements Converter<Review, ReviewDTO> {

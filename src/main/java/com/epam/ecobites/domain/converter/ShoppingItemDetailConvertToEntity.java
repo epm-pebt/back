@@ -1,9 +1,9 @@
-package com.epam.ecobites.converter;
+package com.epam.ecobites.domain.converter;
 
 import com.epam.ecobites.data.ShoppingItemRepository;
 import com.epam.ecobites.domain.ShoppingItem;
 import com.epam.ecobites.domain.ShoppingItemDetail;
-import com.epam.ecobites.dto.ShoppingItemDetailDTO;
+import com.epam.ecobites.domain.dto.ShoppingItemDetailDTO;
 import com.epam.ecobites.exception.NotFoundException;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;

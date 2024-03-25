@@ -1,7 +1,7 @@
-package com.epam.ecobites.converter;
+package com.epam.ecobites.domain.converter;
 
 import com.epam.ecobites.domain.ShoppingItem;
-import com.epam.ecobites.dto.ShoppingItemDTO;
+import com.epam.ecobites.domain.dto.ShoppingItemDTO;
 import org.springframework.core.convert.converter.Converter;
 
 public class ShoppingItemConvertToDTO implements Converter<ShoppingItem, ShoppingItemDTO> {

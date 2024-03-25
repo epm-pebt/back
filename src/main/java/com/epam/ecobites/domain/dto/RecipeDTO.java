@@ -1,4 +1,4 @@
-package com.epam.ecobites.dto;
+package com.epam.ecobites.domain.dto;
 
 import com.epam.ecobites.domain.DietCategory;
 import com.epam.ecobites.domain.DishType;

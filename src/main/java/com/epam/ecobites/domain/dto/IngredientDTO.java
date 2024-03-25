@@ -1,8 +1,5 @@
-package com.epam.ecobites.dto;
+package com.epam.ecobites.domain.dto;
 
-import com.epam.ecobites.domain.RecipeIngredient;
-import com.epam.ecobites.domain.ShoppingItem;
-import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

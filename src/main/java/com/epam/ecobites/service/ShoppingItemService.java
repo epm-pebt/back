@@ -1,11 +1,10 @@
 package com.epam.ecobites.service;
 
-import com.epam.ecobites.converter.ShoppingItemConvertToDTO;
-import com.epam.ecobites.converter.ShoppingItemConvertToEntity;
-import com.epam.ecobites.converter.ShoppingItemDetailConvertToEntity;
+import com.epam.ecobites.domain.converter.ShoppingItemConvertToDTO;
+import com.epam.ecobites.domain.converter.ShoppingItemConvertToEntity;
 import com.epam.ecobites.data.ShoppingItemRepository;
 import com.epam.ecobites.domain.ShoppingItem;
-import com.epam.ecobites.dto.ShoppingItemDTO;
+import com.epam.ecobites.domain.dto.ShoppingItemDTO;
 import com.epam.ecobites.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 

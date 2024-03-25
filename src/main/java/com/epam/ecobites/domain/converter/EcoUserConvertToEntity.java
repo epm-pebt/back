@@ -1,7 +1,7 @@
-package com.epam.ecobites.converter;
+package com.epam.ecobites.domain.converter;
 
 import com.epam.ecobites.domain.EcoUser;
-import com.epam.ecobites.dto.EcoUserDTO;
+import com.epam.ecobites.domain.dto.EcoUserDTO;
 import org.springframework.core.convert.converter.Converter;
 
 public class EcoUserConvertToEntity implements Converter<EcoUserDTO, EcoUser> {

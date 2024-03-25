@@ -1,10 +1,10 @@
 package com.epam.ecobites.service;
 
-import com.epam.ecobites.converter.RecipeConvertToDTO;
-import com.epam.ecobites.converter.RecipeConvertToEntity;
+import com.epam.ecobites.domain.converter.RecipeConvertToDTO;
+import com.epam.ecobites.domain.converter.RecipeConvertToEntity;
 import com.epam.ecobites.data.RecipeRepository;
 import com.epam.ecobites.domain.Recipe;
-import com.epam.ecobites.dto.RecipeDTO;
+import com.epam.ecobites.domain.dto.RecipeDTO;
 import com.epam.ecobites.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 

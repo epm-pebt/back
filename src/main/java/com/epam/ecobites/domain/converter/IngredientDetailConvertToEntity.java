@@ -1,7 +1,7 @@
-package com.epam.ecobites.converter;
+package com.epam.ecobites.domain.converter;
 
 import com.epam.ecobites.domain.IngredientDetail;
-import com.epam.ecobites.dto.IngredientDetailDTO;
+import com.epam.ecobites.domain.dto.IngredientDetailDTO;
 import org.springframework.core.convert.converter.Converter;
 
 public class IngredientDetailConvertToEntity implements Converter<IngredientDetailDTO, IngredientDetail> {

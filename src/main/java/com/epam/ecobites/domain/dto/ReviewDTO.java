@@ -1,4 +1,4 @@
-package com.epam.ecobites.dto;
+package com.epam.ecobites.domain.dto;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

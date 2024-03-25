@@ -1,10 +1,10 @@
 package com.epam.ecobites.service;
 
-import com.epam.ecobites.converter.ReviewConvertToDTO;
-import com.epam.ecobites.converter.ReviewConvertToEntity;
+import com.epam.ecobites.domain.converter.ReviewConvertToDTO;
+import com.epam.ecobites.domain.converter.ReviewConvertToEntity;
 import com.epam.ecobites.data.ReviewRepository;
 import com.epam.ecobites.domain.Review;
-import com.epam.ecobites.dto.ReviewDTO;
+import com.epam.ecobites.domain.dto.ReviewDTO;
 import com.epam.ecobites.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 

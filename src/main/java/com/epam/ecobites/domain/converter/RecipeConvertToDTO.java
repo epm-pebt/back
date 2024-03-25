@@ -1,7 +1,7 @@
-package com.epam.ecobites.converter;
+package com.epam.ecobites.domain.converter;
 
 import com.epam.ecobites.domain.Recipe;
-import com.epam.ecobites.dto.RecipeDTO;
+import com.epam.ecobites.domain.dto.RecipeDTO;
 import org.springframework.core.convert.converter.Converter;
 
 public class RecipeConvertToDTO implements Converter<Recipe, RecipeDTO> {

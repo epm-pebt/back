@@ -1,11 +1,10 @@
 package com.epam.ecobites.service;
 
-import com.epam.ecobites.converter.EcoUserConvertToDTO;
-import com.epam.ecobites.converter.EcoUserConvertToEntity;
+import com.epam.ecobites.domain.converter.EcoUserConvertToDTO;
+import com.epam.ecobites.domain.converter.EcoUserConvertToEntity;
 import com.epam.ecobites.data.EcoUserRepository;
 import com.epam.ecobites.domain.EcoUser;
-import com.epam.ecobites.dto.EcoUserDTO;
-import com.epam.ecobites.dto.ShoppingItemDTO;
+import com.epam.ecobites.domain.dto.EcoUserDTO;
 import com.epam.ecobites.exception.NotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
