@@ -8,6 +8,7 @@ import com.epam.ecobites.domain.dto.RecipeDTO;
 import com.epam.ecobites.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -84,6 +85,12 @@ public class RecipeService implements CrudService<RecipeDTO, Long> {
             throw new NotFoundException("Recipe with id " + id + " not found");
         }
         recipeRepository.deleteById(id);
+    }
+
+    public List<RecipeDTO> getAllSortedByCookingTime() {
+        List<Recipe> recipes = recipeRepository.findAll();
+        recipes.sort(Comparator.comparing(Recipe::getTime));
+        return recipes.stream().map(convertToDTO::convert).collect(Collectors.toList());
     }
 
     private void nullCheck(Object obj) {
