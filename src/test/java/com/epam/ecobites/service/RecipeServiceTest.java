@@ -33,19 +33,18 @@ class RecipeServiceTest {
     @InjectMocks
     private RecipeServiceImpl recipeServiceImpl;
 
-    private static final Long ID = 1L;
     private static final String NAME = "test";
     private static final int TIME = 30;
 
     @DisplayName("Test getting all recipes")
     @Test
     void testGetAllRecipes() {
-        Recipe recipe1 = createRecipe(ID,NAME,TIME);
+        Recipe recipe1 = createRecipe(1L,NAME,TIME);
         Recipe recipe2 = createRecipe(2L,NAME,TIME);
         List<Recipe> recipeList = Arrays.asList(recipe1, recipe2);
 
-        RecipeDto recipeDTO1 = createRecipeDto(ID,NAME,TIME);
-        RecipeDto recipeDTO2 = createRecipeDto(2L,NAME,TIME);
+        RecipeDto recipeDTO1 = createRecipeDto(NAME,TIME);
+        RecipeDto recipeDTO2 = createRecipeDto(NAME,TIME);
         List<RecipeDto> recipeDTOList = Arrays.asList(recipeDTO1, recipeDTO2);
 
         when(recipeRepository.findAll()).thenReturn(recipeList);
@@ -71,7 +70,6 @@ class RecipeServiceTest {
         when(recipeRepository.findAll(any(Pageable.class))).thenReturn(page);
         when(recipeMapper.toRecipeDto(any(Recipe.class)))
                 .thenAnswer(i -> createRecipeDto(
-                        ((Recipe) i.getArguments()[0]).getId(),
                         ((Recipe) i.getArguments()[0]).getName(),
                         ((Recipe) i.getArguments()[0]).getTime()));
 
@@ -92,9 +90,8 @@ class RecipeServiceTest {
         return recipe;
     }
 
-    private RecipeDto createRecipeDto(Long id, String name, int time) {
+    private RecipeDto createRecipeDto(String name, int time) {
         RecipeDto recipeDto = new RecipeDto();
-        recipeDto.setId(id);
         recipeDto.setName(name);
         recipeDto.setTime(time);
         recipeDto.setImage("Test Image");

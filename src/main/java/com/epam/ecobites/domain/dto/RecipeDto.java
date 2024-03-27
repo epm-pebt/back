@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RecipeDto {
-    private Long id;
     private String name;
     private int time;
     private String image;
