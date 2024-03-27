@@ -1,6 +1,5 @@
 package com.epam.ecobites.controller;
 
-import com.epam.ecobites.data.RecipeRepository;
 import com.epam.ecobites.domain.dto.RecipeDto;
 import com.epam.ecobites.service.RecipeService;
 import com.epam.ecobites.service.RecipeServiceImpl;
