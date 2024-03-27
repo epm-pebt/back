@@ -2,6 +2,7 @@ package com.epam.ecobites.controller;
 
 import com.epam.ecobites.domain.dto.RecipeDto;
 import com.epam.ecobites.service.RecipeService;
+import com.epam.ecobites.service.RecipeServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -16,8 +17,8 @@ public class RecipeController {
     public final RecipeService<RecipeDto> recipeService;
 
     @Autowired
-    public RecipeController(RecipeService<RecipeDto> recipeService) {
-        this.recipeService = recipeService;
+    public RecipeController(RecipeServiceImpl recipeServiceImpl) {
+        this.recipeService = recipeServiceImpl;
     }
 
 
