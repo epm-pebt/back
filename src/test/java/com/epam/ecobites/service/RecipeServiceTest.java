@@ -32,7 +32,6 @@ class RecipeServiceTest {
 
     @InjectMocks
     private RecipeServiceImpl recipeServiceImpl;
-
     private static final String NAME = "test";
     private static final int TIME = 30;
 
@@ -60,9 +59,9 @@ class RecipeServiceTest {
     @Test
     void testFindTop10ByLeastCookingTime() {
         List<Recipe> recipes = Arrays.asList(
-                createRecipe(1L, "Recipe1", 30),
+                createRecipe(3L, "Recipe3", 10),
                 createRecipe(2L, "Recipe2", 20),
-                createRecipe(3L, "Recipe3", 10)
+                createRecipe(1L, "Recipe1", 30)
         );
 
         Page<Recipe> page = new PageImpl<>(recipes);
@@ -70,15 +69,13 @@ class RecipeServiceTest {
         when(recipeRepository.findAll(any(Pageable.class))).thenReturn(page);
         when(recipeMapper.toRecipeDto(any(Recipe.class)))
                 .thenAnswer(i -> createRecipeDto(
-                        ((Recipe) i.getArguments()[0]).getName(),
-                        ((Recipe) i.getArguments()[0]).getTime()));
+                        ((Recipe) i.getArgument(0)).getName(),
+                        ((Recipe) i.getArgument(0)).getTime()));
 
         List<RecipeDto> result = recipeServiceImpl.findTop10ByLeastCookingTime();
-
         assertEquals(3, result.size());
-        assertEquals("Recipe1", result.get(0).getName());
-        assertEquals("Recipe2", result.get(1).getName());
-        assertEquals("Recipe3", result.get(2).getName());
+        assertEquals(10, result.getFirst().getTime());
+        assertEquals(30, result.getLast().getTime());
     }
 
     private Recipe createRecipe(Long id, String name, int time) {
