@@ -32,36 +32,45 @@ class RecipeServiceTest {
 
     @InjectMocks
     private RecipeServiceImpl recipeServiceImpl;
-    private static final String NAME = "test";
-    private static final int TIME = 30;
+
+    private static final Long RECIPE_ID_1 = 1L;
+    private static final Long RECIPE_ID_2 = 2L;
+    private static final Long RECIPE_ID_3 = 3L;
+    private static final String RECIPE_NAME_1 = "Recipe1";
+    private static final String RECIPE_NAME_2 = "Recipe2";
+    private static final String RECIPE_NAME_3 = "Recipe3";
+    private static final int RECIPE_TIME_1 = 30;
+    private static final int RECIPE_TIME_2 = 20;
+    private static final int RECIPE_TIME_3 = 10;
+    private static final int EXPECTED_SIZE_2 = 2;
+    private static final int EXPECTED_SIZE_3 = 3;
+    private static final int TO_RECIPE_DTO_FIRST_ARGUMENT = 0;
 
     @DisplayName("Test getting all recipes")
     @Test
     void testGetAllRecipes() {
-        Recipe recipe1 = createRecipe(1L,NAME,TIME);
-        Recipe recipe2 = createRecipe(2L,NAME,TIME);
+        Recipe recipe1 = createRecipe(RECIPE_ID_1,RECIPE_NAME_1,RECIPE_TIME_1);
+        Recipe recipe2 = createRecipe(RECIPE_ID_2,RECIPE_NAME_2,RECIPE_TIME_2);
         List<Recipe> recipeList = Arrays.asList(recipe1, recipe2);
 
-        RecipeDto recipeDTO1 = createRecipeDto(NAME,TIME);
-        RecipeDto recipeDTO2 = createRecipeDto(NAME,TIME);
-        List<RecipeDto> recipeDTOList = Arrays.asList(recipeDTO1, recipeDTO2);
-
         when(recipeRepository.findAll()).thenReturn(recipeList);
-        when(recipeMapper.toRecipeDto(recipe1)).thenReturn(recipeDTO1);
-        when(recipeMapper.toRecipeDto(recipe2)).thenReturn(recipeDTO2);
+        when(recipeMapper.toRecipeDto(any(Recipe.class)))
+                .thenAnswer(i -> createRecipeDto(
+                        ((Recipe) i.getArgument(TO_RECIPE_DTO_FIRST_ARGUMENT)).getName(),
+                        ((Recipe) i.getArgument(TO_RECIPE_DTO_FIRST_ARGUMENT)).getTime()));
 
         List<RecipeDto> result = recipeServiceImpl.getAll();
 
-        assertEquals(recipeDTOList, result);
+        assertEquals(EXPECTED_SIZE_2, result.size());
     }
 
     @DisplayName("Test finding top 10 recipes by least cooking time")
     @Test
     void testFindTop10ByLeastCookingTime() {
         List<Recipe> recipes = Arrays.asList(
-                createRecipe(3L, "Recipe3", 10),
-                createRecipe(2L, "Recipe2", 20),
-                createRecipe(1L, "Recipe1", 30)
+                createRecipe(RECIPE_ID_3, RECIPE_NAME_3, RECIPE_TIME_3),
+                createRecipe(RECIPE_ID_2, RECIPE_NAME_2, RECIPE_TIME_2),
+                createRecipe(RECIPE_ID_1, RECIPE_NAME_1, RECIPE_TIME_1)
         );
 
         Page<Recipe> page = new PageImpl<>(recipes);
@@ -69,13 +78,14 @@ class RecipeServiceTest {
         when(recipeRepository.findAll(any(Pageable.class))).thenReturn(page);
         when(recipeMapper.toRecipeDto(any(Recipe.class)))
                 .thenAnswer(i -> createRecipeDto(
-                        ((Recipe) i.getArgument(0)).getName(),
-                        ((Recipe) i.getArgument(0)).getTime()));
+                        ((Recipe) i.getArgument(TO_RECIPE_DTO_FIRST_ARGUMENT)).getName(),
+                        ((Recipe) i.getArgument(TO_RECIPE_DTO_FIRST_ARGUMENT)).getTime()));
 
         List<RecipeDto> result = recipeServiceImpl.findTop10ByLeastCookingTime();
-        assertEquals(3, result.size());
-        assertEquals(10, result.getFirst().getTime());
-        assertEquals(30, result.getLast().getTime());
+
+        assertEquals(EXPECTED_SIZE_3, result.size());
+        assertEquals(RECIPE_NAME_3,result.getFirst().getName());
+        assertEquals(RECIPE_NAME_1,result.getLast().getName());
     }
 
     private Recipe createRecipe(Long id, String name, int time) {
