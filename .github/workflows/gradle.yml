@@ -8,11 +8,21 @@
 name: Java CI with Gradle
 
 on:
+<<<<<<< HEAD
   push:
     branches: [ "pipeline-workflow-CICD" ]
 
   pull_request:
     branches: [ "pipeline-workflow-CICD" ]
+=======
+  workflow_dispatch:
+    inputs:
+      release-artifact:
+        description: "Manually creates the .jar artifact"
+        required: false
+        type: boolean
+        default: false
+>>>>>>> 1a084fcaa24d9412c36e59bdd387c00e3b47ad91
 
   workflow_dispatch:
     inputs:
