@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -31,6 +32,23 @@ public class RecipeServiceImpl implements RecipeService<RecipeDto> {
         PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("time").ascending());
         Page<Recipe> page = recipeRepository.findAll(pageRequest);
         return page.getContent().stream().map(recipeMapper::toRecipeDto).toList();
+    }
+
+    @Override
+    public List<RecipeDto> searchRecipes(String name) {
+        if (isLengthOfRecipeNameCorrect(name)) {
+            return getRecipeDtoList(name);
+        }
+        return Collections.emptyList();
+    }
+
+    private boolean isLengthOfRecipeNameCorrect(String name) {
+        return name.length() >= 3;
+    }
+
+    private List<RecipeDto> getRecipeDtoList(String name) {
+        List<Recipe> recipeList = recipeRepository.findByNameLike(name);
+        return recipeList.stream().map(recipeMapper::toRecipeDto).toList();
     }
 }
 
