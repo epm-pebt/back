@@ -45,6 +45,7 @@ class RecipeServiceTest {
     private static final int EXPECTED_SIZE_2 = 2;
     private static final int EXPECTED_SIZE_3 = 3;
     private static final int TO_RECIPE_DTO_FIRST_ARGUMENT = 0;
+    private static final String SEARCH_TEXT = "Rec";
 
     @DisplayName("Test getting all recipes")
     @Test
@@ -86,6 +87,26 @@ class RecipeServiceTest {
         assertEquals(EXPECTED_SIZE_3, result.size());
         assertEquals(RECIPE_NAME_3,result.getFirst().getName());
         assertEquals(RECIPE_NAME_1,result.getLast().getName());
+    }
+
+    @DisplayName("Test searching recipes by name using 3 or more character and press enter")
+    @Test
+    void testSearchRecipes() {
+        List<Recipe> recipes = Arrays.asList(
+                createRecipe(RECIPE_ID_1, RECIPE_NAME_1, RECIPE_TIME_1),
+                createRecipe(RECIPE_ID_2, RECIPE_NAME_2, RECIPE_TIME_2)
+        );
+
+        when(recipeRepository.findByNameLike(SEARCH_TEXT)).thenReturn(recipes);
+        when(recipeMapper.toRecipeDto(any(Recipe.class)))
+                .thenAnswer(i -> createRecipeDto(
+                        ((Recipe) i.getArgument(TO_RECIPE_DTO_FIRST_ARGUMENT)).getName(),
+                        ((Recipe) i.getArgument(TO_RECIPE_DTO_FIRST_ARGUMENT)).getTime()));
+
+        List<RecipeDto> result = recipeServiceImpl.searchRecipes(SEARCH_TEXT);
+
+        assertEquals(EXPECTED_SIZE_2, result.size());
+        assertEquals(SEARCH_TEXT, RECIPE_NAME_1.substring(0,3));
     }
 
     private Recipe createRecipe(Long id, String name, int time) {
