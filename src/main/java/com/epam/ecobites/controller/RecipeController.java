@@ -4,9 +4,12 @@ import com.epam.ecobites.domain.dto.RecipeDto;
 import com.epam.ecobites.service.RecipeService;
 import com.epam.ecobites.service.RecipeServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -25,5 +28,10 @@ public class RecipeController {
     @GetMapping("/api/v1/recipes")
     public ResponseEntity<List<RecipeDto>> getAllRecipes(){
         return new ResponseEntity<>(recipeService.getAll(), HttpStatusCode.valueOf(200));
+    }
+
+    @GetMapping("/api/v1/searchRecipes")
+    public ResponseEntity<List<RecipeDto>> searchRecipes(@RequestParam String name) {
+        return new ResponseEntity<>(recipeService.searchRecipes(name), HttpStatus.valueOf(200));
     }
 }

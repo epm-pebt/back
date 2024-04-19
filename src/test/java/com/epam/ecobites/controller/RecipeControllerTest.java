@@ -39,4 +39,18 @@ class RecipeControllerTest {
 
         assertEquals(systemUnderTest.getAllRecipes(), result);
     }
+
+    @Test
+    void testSearchRecipes() {
+        List<RecipeDto> recipes = new ArrayList<>();
+        recipes.add(new RecipeDto("food", 10, "url1"));
+        recipes.add(new RecipeDto("food", 20, "url2"));
+        recipes.add(new RecipeDto("food", 30, "url3"));
+
+        when(recipeService.searchRecipes("food")).thenReturn(recipes);
+
+        ResponseEntity<List<RecipeDto>> expected = new ResponseEntity<>(recipes, HttpStatusCode.valueOf(200));
+        ResponseEntity<List<RecipeDto>> actual = systemUnderTest.searchRecipes("food");
+        assertEquals(expected, actual);
+    }
 }
