@@ -6,8 +6,9 @@ import com.epam.ecobites.domain.Ingredient;
 import com.epam.ecobites.domain.IngredientDetail;
 import com.epam.ecobites.domain.Recipe;
 import com.epam.ecobites.domain.RecipeIngredient;
-import com.epam.ecobites.domain.dto.DetailedRecipeDto;
+import com.epam.ecobites.domain.dto.*;
 import com.epam.ecobites.domain.mapper.DetailedRecipeMapper;
+import com.epam.ecobites.domain.mapper.RecipeMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +31,8 @@ class DetailedRecipeServiceImplTest {
     private RecipeIngredientRepository recipeIngredientRepository;
     @Mock
     private DetailedRecipeMapper detailedRecipeMapper;
+    @Mock
+    private RecipeMapper recipeMapper;
     @InjectMocks
     private DetailedRecipeServiceImpl detailedRecipeService;
 
@@ -48,8 +51,10 @@ class DetailedRecipeServiceImplTest {
     @DisplayName("Test getDetailedRecipe by recipe name")
     @Test
     void testGetDetailedRecipe(){
-        Recipe recipe = createRecipe(RECIPE_ID, RECIPE_NAME, RECIPE_TIME);
-        Ingredient ingredient = createIngredient(INGREDIENT_ID, INGREDIENT_NAME,new ArrayList<>());
+        Recipe recipe =
+                createRecipe(RECIPE_ID, RECIPE_NAME, RECIPE_TIME);
+        Ingredient ingredient =
+                createIngredient(INGREDIENT_ID, INGREDIENT_NAME,new ArrayList<>());
         IngredientDetail ingredientDetail =
                 createIngredientDetail(INGREDIENT_DETAIL_ID, INGREDIENT_DETAIL_QUANTITY, INGREDIENT_DETAIL_UNIT, new ArrayList<>());
 
@@ -57,17 +62,25 @@ class DetailedRecipeServiceImplTest {
         ingredientDetail.setRecipeIngredients(recipeIngredients);
         ingredient.setRecipeIngredients(recipeIngredients);
         recipe.setRecipeIngredients(recipeIngredients);
-        DetailedRecipeDto detailedRecipeDto = new DetailedRecipeDto(RECIPE_NAME, RECIPE_TIME,IMAGE_URL,recipeIngredients);
+
+        RecipeDto recipeDto = new RecipeDto(RECIPE_NAME, RECIPE_TIME, IMAGE_URL);
+        RecipeIngredientDto recipeIngredientDto = new RecipeIngredientDto(new IngredientDto(INGREDIENT_NAME), new IngredientDetailDto(INGREDIENT_DETAIL_QUANTITY, INGREDIENT_DETAIL_UNIT));
+        List<RecipeIngredientDto> recipeIngredientDtos = new ArrayList<>();
+        recipeIngredientDtos.add(recipeIngredientDto);
+        DetailedRecipeDto detailedRecipeDto = new DetailedRecipeDto(recipeDto, recipeIngredientDtos);
+
 
         when(recipeRepository.findByName(any(String.class)))
                 .thenReturn(recipe);
         when(recipeIngredientRepository.findByRecipeId(any(Long.class)))
                 .thenReturn(recipeIngredients);
-        when(detailedRecipeMapper.toDetailedRecipe(any(Recipe.class), any(ArrayList.class)))
-                .thenReturn(detailedRecipeDto);
-
+        when(recipeMapper.toRecipeDto(any(Recipe.class)))
+                .thenReturn(recipeDto);
+        when(detailedRecipeMapper.toRecipeIngredientDtos(any(ArrayList.class)))
+                .thenReturn(recipeIngredientDtos);
         assertEquals(detailedRecipeDto, detailedRecipeService.getRecipeDetails(RECIPE_NAME));
     }
+
 
     private Recipe createRecipe(Long id, String name, int time) {
         Recipe recipe = new Recipe();

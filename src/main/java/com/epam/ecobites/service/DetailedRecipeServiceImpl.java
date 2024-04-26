@@ -8,7 +8,10 @@ import com.epam.ecobites.domain.Recipe;
 import com.epam.ecobites.domain.RecipeIngredient;
 import com.epam.ecobites.domain.ShoppingItem;
 import com.epam.ecobites.domain.dto.DetailedRecipeDto;
+import com.epam.ecobites.domain.dto.RecipeDto;
+import com.epam.ecobites.domain.dto.RecipeIngredientDto;
 import com.epam.ecobites.domain.mapper.DetailedRecipeMapper;
+import com.epam.ecobites.domain.mapper.RecipeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,22 +25,34 @@ public class DetailedRecipeServiceImpl implements DetailedRecipeService{
     private final RecipeRepository recipeRepository;
     private final RecipeIngredientRepository recipeIngredientRepository;
     private final DetailedRecipeMapper detailedRecipeMapper;
+    private final RecipeMapper recipeMapper;
 
     @Autowired
     public DetailedRecipeServiceImpl(
             RecipeRepository recipeRepository,
             RecipeIngredientRepository recipeIngredientRepository,
             DetailedRecipeMapper detailedRecipeMapper,
-            EcoUserRepository ecoUserRepository){
+            RecipeMapper recipeMapper
+            ){
         this.recipeRepository = recipeRepository;
         this.recipeIngredientRepository = recipeIngredientRepository;
         this.detailedRecipeMapper = detailedRecipeMapper;
+        this.recipeMapper = recipeMapper;
     }
 
     @Override
     public DetailedRecipeDto getRecipeDetails(String recipeName) {
         Recipe recipe = recipeRepository.findByName(recipeName);
         List<RecipeIngredient> recipeIngredientList = recipeIngredientRepository.findByRecipeId(recipe.getId());
-        return detailedRecipeMapper.toDetailedRecipe(recipe, recipeIngredientList);
+        return createRecipeIngredientDtos(recipeIngredientList, recipe);
+    }
+
+    private DetailedRecipeDto createRecipeIngredientDtos(List<RecipeIngredient> recipeIngredients, Recipe recipe){
+        DetailedRecipeDto detailedRecipeDto = new DetailedRecipeDto();
+        List<RecipeIngredientDto> recipeIngredientDtos = detailedRecipeMapper.toRecipeIngredientDtos(recipeIngredients);
+        RecipeDto recipeDto = recipeMapper.toRecipeDto(recipe);
+        detailedRecipeDto.setRecipeIngredientDtos(recipeIngredientDtos);
+        detailedRecipeDto.setRecipeDto(recipeDto);
+        return detailedRecipeDto;
     }
 }

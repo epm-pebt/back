@@ -1,11 +1,15 @@
 package com.epam.ecobites.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @Table(name = "RECIPE_INGREDIENT")
+@AllArgsConstructor
+@NoArgsConstructor
 public class RecipeIngredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

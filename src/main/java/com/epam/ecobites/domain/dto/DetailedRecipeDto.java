@@ -11,8 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DetailedRecipeDto {
-    private String name;
-    private int time;
-    private String image;
-    List<RecipeIngredient> recipeIngredients;
+    private RecipeDto recipeDto;
+    List<RecipeIngredientDto> recipeIngredientDtos;
 }
