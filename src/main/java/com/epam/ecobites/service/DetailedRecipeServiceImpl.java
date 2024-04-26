@@ -22,7 +22,6 @@ public class DetailedRecipeServiceImpl implements DetailedRecipeService{
     private final RecipeRepository recipeRepository;
     private final RecipeIngredientRepository recipeIngredientRepository;
     private final DetailedRecipeMapper detailedRecipeMapper;
-    //private final EcoUserRepository ecoUserRepository;
 
     @Autowired
     public DetailedRecipeServiceImpl(
@@ -33,7 +32,6 @@ public class DetailedRecipeServiceImpl implements DetailedRecipeService{
         this.recipeRepository = recipeRepository;
         this.recipeIngredientRepository = recipeIngredientRepository;
         this.detailedRecipeMapper = detailedRecipeMapper;
-        //this.ecoUserRepository = ecoUserRepository;
     }
 
     @Override
@@ -42,25 +40,4 @@ public class DetailedRecipeServiceImpl implements DetailedRecipeService{
         List<RecipeIngredient> recipeIngredientList = recipeIngredientRepository.findByRecipeId(recipe.getId());
         return detailedRecipeMapper.toDetailedRecipe(recipe, recipeIngredientList);
     }
-
-   /*@Override
-    public List<ShoppingItem> addToGrocery(String recipeName, String ecoUsername) {
-        Recipe recipe = recipeRepository.findByName(recipeName);
-        List<RecipeIngredient> recipeIngredientList = recipeIngredientRepository.findByRecipeId(recipe.getId());
-        EcoUser ecoUser = this.ecoUserRepository.findByUsername(ecoUsername).orElseThrow(()-> new NoSuchElementException("User not found with the name "+ecoUsername));
-
-        return List.of();
-    }
-
-    private List<ShoppingItem> createShoppingItems(List<RecipeIngredient> recipeIngredients, EcoUser ecoUser){
-        List<ShoppingItem> shoppingItems = new ArrayList<>();
-        recipeIngredients.forEach(ri ->{
-            ShoppingItem shoppingItem = new ShoppingItem();
-            shoppingItem.setRecipe(ri.getRecipe());
-            shoppingItem.setIngredient(ri.getIngredient());
-            shoppingItem.setEcoUser(ecoUser);
-            shoppingItem.setShoppingItemDetail();
-            shoppingItems.add(shoppingItem);
-        });
-    }*/
 }
