@@ -22,4 +22,9 @@ public class RecipeIngredient {
     @ManyToOne
     @JoinColumn(name = "IngredientDetailID")
     private IngredientDetail ingredientDetail;
+
+    @Override
+    public String toString() {
+        return "RecipeIngredient{}";
+    }
 }
