@@ -1,8 +1,8 @@
-cd db
-docker build . -t ecobites-db-image
+cd src/main/resources/db
+docker build . -t ecobites-db-image --build-arg username=user --build-arg password=pass
 
-cd ..
-docker build . -t ecobites-backend-image
+cd ../../../..
+docker build . -t ecobites-backend-image --build-arg username=user --build-arg password=pass
 
 docker network create -d bridge ecobites-network
 
@@ -19,7 +19,7 @@ create database ecobitesdb;
 
 docker network connect ecobites-network ecobites-db-container
 
-docker run -p 8081:8081 --name=ecobites-backend-container --network=ecobites-network ecobites-backend-image
+docker run -p 8080:8080 --name=ecobites-backend-container --network=ecobites-network ecobites-backend-image
 
 
 To remove container and image you can use `docker rm container-name` and `docker rmi image-name`
