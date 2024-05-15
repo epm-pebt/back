@@ -3,6 +3,8 @@ package com.epam.ecobites.domain;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Entity
 @Data
 @Table(name = "SHOPPING_ITEM_DETAIL")
@@ -13,8 +15,6 @@ public class ShoppingItemDetail {
     private int quantity;
     private String unit;
 
-    @ManyToOne
-    @JoinColumn(name = "ShoppingItemID")
-    private ShoppingItem shoppingItem;
-
+    @OneToMany(mappedBy = "shoppingItemDetail")
+    private List<ShoppingItem> shoppingItem;
 }
