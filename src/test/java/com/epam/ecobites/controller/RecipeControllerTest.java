@@ -28,10 +28,10 @@ class RecipeControllerTest {
     @Test
     void testGetAllRecipes() {
         List<RecipeDto> recipeDtos = new ArrayList<>();
-        recipeDtos.add(new RecipeDto("food1",30, "url1"));
-        recipeDtos.add(new RecipeDto("food2",40, "url2"));
-        recipeDtos.add(new RecipeDto("food3",50, "url3"));
-        recipeDtos.add(new RecipeDto("food4",10, "url4"));
+        recipeDtos.add(new RecipeDto(0,"food1",30, "url1","LUNCH", "VEGAN"));
+        recipeDtos.add(new RecipeDto(1,"food2",40, "url2", "LUNCH", "VEGAN"));
+        recipeDtos.add(new RecipeDto(2,"food3",50, "url3", "LUNCH", "VEGAN"));
+        recipeDtos.add(new RecipeDto(3,"food4",10, "url4", "LUNCH","VEGAN"));
         ResponseEntity<List<RecipeDto>> result =
                 new ResponseEntity<>(recipeDtos, HttpStatusCode.valueOf(200));
 
