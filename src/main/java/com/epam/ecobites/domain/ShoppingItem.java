@@ -25,8 +25,7 @@ public class ShoppingItem {
     @JoinColumn(name = "UserID")
     private EcoUser ecoUser;
 
-    @ManyToOne
-    @JoinColumn(name = "ShoppingItemDetailID")
-    private ShoppingItemDetail shoppingItemDetail;
+    @OneToMany(mappedBy = "shoppingItem")
+    private List<ShoppingItemDetail> shoppingItemDetails;
 }
 

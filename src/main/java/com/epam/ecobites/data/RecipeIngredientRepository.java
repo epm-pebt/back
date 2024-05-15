@@ -3,8 +3,6 @@ package com.epam.ecobites.data;
 import com.epam.ecobites.domain.RecipeIngredient;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-
 public interface RecipeIngredientRepository extends JpaRepository<RecipeIngredient, Long> {
-    List<RecipeIngredient> findByRecipeId(Long recipeId);
+    // custom queries..
 }
