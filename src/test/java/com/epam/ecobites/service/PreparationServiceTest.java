@@ -45,7 +45,7 @@ public class PreparationServiceTest {
         List<RecipeStepDto> recipeStepDtos = createRecipeStepDtos();
 
         when(recipeRepository.findByName(any(String.class))).thenReturn(Optional.of(recipe));
-        when(recipeStepRepository.findByRecipeID(any(Long.class))).thenReturn(recipeSteps);
+        when(recipeStepRepository.findByRecipeId(any(Long.class))).thenReturn(recipeSteps);
         when(recipeStepMapper.toRecipeStepDto(any(RecipeStep.class))).thenReturn(
                 recipeStepDtos.get(0),recipeStepDtos.get(1), recipeStepDtos.get(2)
         );

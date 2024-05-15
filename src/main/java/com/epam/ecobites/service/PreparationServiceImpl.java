@@ -34,7 +34,7 @@ public class PreparationServiceImpl implements PreparationService{
         Recipe recipe = recipeRepository.findByName(recipeName).orElseThrow(
                 ()-> new NoSuchElementException("There is no recipe named "+recipeName)
         );
-        List<RecipeStep> recipeSteps = recipeStepRepository.findByRecipeID(recipe.getId());
+        List<RecipeStep> recipeSteps = recipeStepRepository.findByRecipeId(recipe.getId());
         return recipeSteps.stream().map(recipeStepMapper::toRecipeStepDto).toList();
     }
 }
