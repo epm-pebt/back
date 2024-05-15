@@ -2,6 +2,8 @@ package com.epam.ecobites.domain;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
+
 import java.util.List;
 
 @Entity
@@ -34,4 +36,9 @@ public class Recipe {
 
     @OneToMany(mappedBy = "recipe")
     private List<RecipeStep> recipeSteps;
+
+    @Override
+    public String toString() {
+        return "Recipe{}";
+    }
 }
