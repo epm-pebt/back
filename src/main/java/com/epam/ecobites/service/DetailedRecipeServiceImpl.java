@@ -42,7 +42,7 @@ public class DetailedRecipeServiceImpl implements DetailedRecipeService{
 
     @Override
     public DetailedRecipeDto getRecipeDetails(String recipeName) {
-        Recipe recipe = recipeRepository.findByName(recipeName);
+        Recipe recipe = recipeRepository.findByName(recipeName).orElseThrow();
         List<RecipeIngredient> recipeIngredientList = recipeIngredientRepository.findByRecipeId(recipe.getId());
         return createRecipeIngredientDtos(recipeIngredientList, recipe);
     }

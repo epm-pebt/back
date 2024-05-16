@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -46,6 +47,8 @@ class DetailedRecipeServiceImplTest {
     private static final String INGREDIENT_DETAIL_UNIT = "Ingredient name";
     private static final Long INGREDIENT_DETAIL_ID = 1L;
     private static final int INGREDIENT_DETAIL_QUANTITY= 2;
+    private static final String DISH_TYPE = "LUNCH";
+    private static final String DIET_CATEGORY = "LUNCH";
 
 
     @DisplayName("Test getDetailedRecipe by recipe name")
@@ -63,7 +66,7 @@ class DetailedRecipeServiceImplTest {
         ingredient.setRecipeIngredients(recipeIngredients);
         recipe.setRecipeIngredients(recipeIngredients);
 
-        RecipeDto recipeDto = new RecipeDto(RECIPE_NAME, RECIPE_TIME, IMAGE_URL);
+        RecipeDto recipeDto = new RecipeDto(RECIPE_ID, RECIPE_NAME, RECIPE_TIME, IMAGE_URL, DISH_TYPE, DIET_CATEGORY);
         RecipeIngredientDto recipeIngredientDto = new RecipeIngredientDto(new IngredientDto(INGREDIENT_NAME), new IngredientDetailDto(INGREDIENT_DETAIL_QUANTITY, INGREDIENT_DETAIL_UNIT));
         List<RecipeIngredientDto> recipeIngredientDtos = new ArrayList<>();
         recipeIngredientDtos.add(recipeIngredientDto);
@@ -71,7 +74,7 @@ class DetailedRecipeServiceImplTest {
 
 
         when(recipeRepository.findByName(any(String.class)))
-                .thenReturn(recipe);
+                .thenReturn(Optional.of(recipe));
         when(recipeIngredientRepository.findByRecipeId(any(Long.class)))
                 .thenReturn(recipeIngredients);
         when(recipeMapper.toRecipeDto(any(Recipe.class)))
