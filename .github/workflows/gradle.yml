@@ -104,7 +104,7 @@ jobs:
 
   deliver:
     needs: build
-    uses: marinaimeninnik/eco-bites-infra/.github/workflows/infra-create.yaml@back-deployment
+    uses: epm-pebt/infra/.github/workflows/infra-create.yaml@main
     permissions:
       id-token: write
       contents: read
@@ -114,7 +114,7 @@ jobs:
 
   deploy:
     needs: deliver
-    uses: marinaimeninnik/eco-bites-back/.github/workflows/docker-deploy.yaml@CD_backend_workflow
+    uses: epm-pebt/back/.github/workflows/docker-deploy.yaml@CI-CD-workflow
     permissions:
       id-token: write
       contents: read
