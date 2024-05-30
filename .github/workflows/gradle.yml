@@ -104,7 +104,7 @@ jobs:
 
   deliver:
     needs: build
-    uses: epm-pebt/infra/.github/workflows/infra-create.yaml@main
+    uses: epm-pebt/infra/.github/workflows/infra-create.yaml@CI-CD_deployment
     permissions:
       id-token: write
       contents: read
