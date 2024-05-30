@@ -64,10 +64,11 @@ jobs:
       run: |
         IMAGE_TAG="v0.0.0"
         if [ "${{ steps.semantic.outputs.new_release_published }}" = "true" ]; then
-          echo "IMAGE_TAG=v${{ steps.semantic.outputs.new_release_version }}" | tee -a $GITHUB_ENV > variables.env
-        else
-          echo "IMAGE_TAG=$(git describe --tags --abbrev=0)" | tee -a $GITHUB_ENV > variables.env
+          IMAGE_TAG="v${{ steps.semantic.outputs.new_release_version }}"
+        elif GIT_TAG=$(git describe --tags --abbrev=0); then
+          IMAGE_TAG=$GIT_TAG
         fi
+        echo "IMAGE_TAG=$IMAGE_TAG" | tee -a $GITHUB_ENV > variables.env
         cat variables.env
 
     - name: Artifact creation
