@@ -1,0 +1,86 @@
+name: Deploy to EC2
+
+on:
+  workflow_call:
+  
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: tf-outputs
+
+      - name: Download docker-compose artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-compose
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+            role-to-assume: ${{ vars.ROLE_ARN }}
+            role-session-name: github-actions-labsadm
+            aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Load instance ID from file
+        run: cat tf-outputs.env >> $GITHUB_ENV
+
+      - name: Check variables
+        run: echo 'bucket_name is ${{ env.ARTIFACT_S3_NAME }}'
+
+      - name: Upload docker-compose to S3
+        run: |
+            aws s3 cp docker-compose.yaml s3://${{ env.ARTIFACT_S3_NAME }}/docker-compose.yaml
+
+      - name: Transfer docker-compose to EC2
+        id: transfer
+        run: |
+            output=$(aws ssm send-command --instance-ids ${{env.INSTANCE_ID}} --document-name "AWS-RunShellScript" --parameters commands=["aws s3 cp s3://${{ env.ARTIFACT_S3_NAME }}/docker-compose.yaml /home/ec2-user/docker-compose.yaml"])
+            command_id=$(echo $output | jq -r '.Command.CommandId')
+            echo "transfer-command-id=$command_id" >> $GITHUB_OUTPUT
+
+      - name: Check transfer status
+        run: |
+            while true; do
+                status=$(aws ssm list-command-invocations --command-id ${{steps.transfer.outputs.transfer-command-id}} --details --query "CommandInvocations[].Status" --output text)
+                if [[ "$status" == "Success" ]]; then
+                    echo "Transfer command completed successfully."
+                    break
+                elif [[ "$status" == "Failed" ]]; then
+                    echo "Transfer command failed. Command details:"
+                    aws ssm list-command-invocations --command-id ${{steps.transfer.outputs.transfer-command-id}} --details
+                    exit 1
+                else
+                    echo "Transfer command is still in progress..."
+                    sleep 10
+                fi
+            done
+
+      - name: Deploy to EC2
+        id: deploy
+        run: |
+            output=$(aws ssm send-command --instance-ids ${{env.INSTANCE_ID}} --document-name "AWS-RunShellScript" --parameters commands='["sudo docker-compose -f /home/ec2-user/docker-compose.yaml down", "sudo docker-compose -f /home/ec2-user/docker-compose.yaml up -d"]')
+            command_id=$(echo $output | jq -r '.Command.CommandId')
+            echo "deploy-command-id=$command_id" >> $GITHUB_OUTPUT
+
+      - name: Check deploy status
+        run: |
+            while true; do
+                status=$(aws ssm list-command-invocations --command-id ${{steps.deploy.outputs.deploy-command-id}} --details --query "CommandInvocations[].Status" --output text)
+                if [[ "$status" == "Success" ]]; then
+                    echo "Deploy command completed successfully."
+                    break
+                elif [[ "$status" == "Failed" ]]; then
+                    echo "Deploy command failed. Command details:"
+                    aws ssm list-command-invocations --command-id ${{steps.deploy.outputs.deploy-command-id}} --details
+                    exit 1
+                else
+                    echo "Deploy command is still in progress..."
+                    sleep 10
+                fi
+            done
