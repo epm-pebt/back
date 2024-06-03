@@ -61,6 +61,34 @@ jobs:
                 fi
             done
 
+      - name: Upload SQL migration script to S3
+        run: |
+            aws s3 cp ./db/migration/V1_0_0__create_base_schema.sql s3://${{ env.ARTIFACT_S3_NAME }}/V1_0_0__create_base_schema.sql
+          
+      - name: Transfer SQL migration script to EC2
+        id: transfer_sql
+        run: |
+            output=$(aws ssm send-command --instance-ids ${{env.INSTANCE_ID}} --document-name "AWS-RunShellScript" --parameters commands=["aws s3 cp s3://${{ env.ARTIFACT_S3_NAME }}/V1_0_0__create_base_schema.sql /home/ec2-user/V1_0_0__create_base_schema.sql"])
+            command_id=$(echo $output | jq -r '.Command.CommandId')
+            echo "transfer-sql-command-id=$command_id" >> $GITHUB_ENV
+      
+      - name: Check SQL migration stage status
+        run: |
+            while true; do
+                status=$(aws ssm list-command-invocations --command-id ${{env.transfer-sql-command-id}} --details --query "CommandInvocations[].Status" --output text)
+                if [[ "$status" == "Success" ]]; then
+                    echo "SQL transfer command completed successfully."
+                    break
+                elif [[ "$status" == "Failed" ]]; then
+                    echo "SQL transfer command failed. Command details:"
+                    aws ssm list-command-invocations --command-id ${{env.transfer-sql-command-id}} --details
+                    exit 1
+                else
+                    echo "SQL transfer command is still in progress..."
+                    sleep 10
+                fi
+            done    
+
       - name: Deploy to EC2
         id: deploy
         run: |
