@@ -7,11 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RecipeDto {
-    private long id;
+public class IngredientDto {
     private String name;
-    private int time;
-    private String image;
-    private String dishType;
-    private String dietCategory;
 }
