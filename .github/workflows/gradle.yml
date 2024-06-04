@@ -49,7 +49,7 @@ jobs:
 
     - name: List files in db/migration/
       if: failure()
-      run: ls -l db/migration/
+      run: ls -la db/migration/
 
     - name: Upload Flyway log
       uses: actions/upload-artifact@v4
