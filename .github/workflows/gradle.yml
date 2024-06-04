@@ -44,6 +44,7 @@ jobs:
         gradle-version: '8.5'
 
     - name: Build with Gradle 8.5
+      id: gradle_build
       run: gradle build
 
     - name: Upload Flyway log
@@ -52,6 +53,10 @@ jobs:
       with:
         name: flyway-log
         path: db/migration/flyway.log
+
+    - name: List files in db/migration/
+      if: steps.gradle_build.outcome == 'failure'
+      run: ls -l db/migration/
 
     - name: Semantic Release
       uses: cycjimmy/semantic-release-action@v4
