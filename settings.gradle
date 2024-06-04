@@ -1,1 +1,3 @@
 rootProject.name = 'ecobites'
+flyway.outputFile=build/flyway.log
+flyway.log.level=DEBUG
