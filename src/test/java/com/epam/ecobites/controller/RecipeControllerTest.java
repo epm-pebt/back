@@ -43,9 +43,9 @@ class RecipeControllerTest {
     @Test
     void testSearchRecipes() {
         List<RecipeDto> recipes = new ArrayList<>();
-        recipes.add(new RecipeDto("food", 10, "url1"));
-        recipes.add(new RecipeDto("food", 20, "url2"));
-        recipes.add(new RecipeDto("food", 30, "url3"));
+        recipes.add(new RecipeDto(0,"food1",30, "url1","LUNCH", "VEGAN"));
+        recipes.add(new RecipeDto(1,"food2",40, "url2", "LUNCH", "VEGAN"));
+        recipes.add(new RecipeDto(2,"food3",50, "url3", "LUNCH", "VEGAN"));
 
         when(recipeService.searchRecipes("food")).thenReturn(recipes);
 
