@@ -5,33 +5,26 @@ import com.epam.ecobites.domain.IngredientDetail;
 import com.epam.ecobites.domain.RecipeIngredient;
 import com.epam.ecobites.domain.dto.RecipeIngredientDto;
 import com.epam.ecobites.domain.mapper.DetailedRecipeMapper;
-import com.epam.ecobites.domain.mapper.DetailedRecipeMapperImpl;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@SpringBootTest
 class DetailedRecipeMapperTest {
     private static final String INGREDIENT_NAME = "Ingredient name";
     private static final Long INGREDIENT_ID = 1L;
     private static final String INGREDIENT_DETAIL_UNIT = "Ingredient name";
     private static final Long INGREDIENT_DETAIL_ID = 1L;
     private static final int INGREDIENT_DETAIL_QUANTITY= 2;
-
+    @Autowired
     DetailedRecipeMapper detailedRecipeMapper;
-
-    @BeforeEach
-    void setUp(){
-        detailedRecipeMapper = new DetailedRecipeMapperImpl();
-    }
 
     @Test
     @DisplayName("Test Detailed Recipe Mapper Recipe ingredient mapping")
