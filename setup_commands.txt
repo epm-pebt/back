@@ -2,7 +2,8 @@ cd db
 docker build . -t ecobites-db-image
 
 cd ..
-docker build . -t ecobites-backend-image
+
+docker build --build-arg password=admin --build-arg username=admin -t ecobites-db-image .
 
 docker network create -d bridge ecobites-network
 
