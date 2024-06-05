@@ -49,11 +49,10 @@ jobs:
 
     - name: List JAR files
       run: |
-        echo 'ls -l /src/main/resources/db/build/libs'
-        ls -la /src/main/resources/db/
-        echo ' /build/libs'
-        ls -la /build/libs
-
+        echo 'ls -l src/main/resources/db/build/libs'
+        ls -la src/main/resources/db/
+        echo ' build/libs'
+        ls -la build/libs
     # - name: List files in db/migration/
     #   if: failure()
     #   run: ls -la db/migration/
