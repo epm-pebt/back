@@ -17,11 +17,11 @@ public class Review {
     private Date dateCreated;
 
     @ManyToOne
-    @JoinColumn(name = "userid")
+    @JoinColumn(name = "userId")
     private EcoUser ecoUser;
 
     @ManyToOne
-    @JoinColumn(name = "recipeid")
+    @JoinColumn(name = "recipeId")
     private Recipe recipe;
 
 }

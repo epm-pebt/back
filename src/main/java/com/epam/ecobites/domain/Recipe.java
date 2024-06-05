@@ -21,7 +21,7 @@ public class Recipe {
     @Enumerated(EnumType.STRING)
     private DietCategory dietCategory;
 
-    private int time;
+    private int cookingTime;
     private String summary;
     private String image;
 

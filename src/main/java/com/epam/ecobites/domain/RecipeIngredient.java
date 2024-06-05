@@ -16,15 +16,15 @@ public class RecipeIngredient {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "RecipeID")
+    @JoinColumn(name = "RecipeId")
     private Recipe recipe;
 
     @ManyToOne
-    @JoinColumn(name = "IngredientID")
+    @JoinColumn(name = "IngredientId")
     private Ingredient ingredient;
 
     @ManyToOne
-    @JoinColumn(name = "IngredientDetailID")
+    @JoinColumn(name = "IngredientDetailId")
     private IngredientDetail ingredientDetail;
 
     @Override
