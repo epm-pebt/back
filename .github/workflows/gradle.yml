@@ -47,18 +47,16 @@ jobs:
       id: gradle_build
       run: gradle build
 
-    - name: List files in db/migration/
-      if: failure()
-      run: ls -la db/migration/
+    # - name: List files in db/migration/
+    #   if: failure()
+    #   run: ls -la db/migration/
 
-    - name: Upload Flyway log
-      uses: actions/upload-artifact@v4
-      if: failure()
-      with:
-        name: flyway-log
-        path: db/migration/flyway.log
-
-    
+    # - name: Upload Flyway log
+    #   uses: actions/upload-artifact@v4
+    #   if: failure()
+    #   with:
+    #     name: flyway-log
+    #     path: db/migration/flyway.log    
 
     - name: Semantic Release
       uses: cycjimmy/semantic-release-action@v4
