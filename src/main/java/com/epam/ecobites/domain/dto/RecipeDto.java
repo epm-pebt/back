@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class RecipeDto {
     private long id;
     private String name;
-    private int time;
+    private int cookingTime;
     private String image;
     private String dishType;
     private String dietCategory;

@@ -14,19 +14,19 @@ public class ShoppingItem {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "RecipeID")
+    @JoinColumn(name = "RecipeId")
     private Recipe recipe;
 
     @ManyToOne
-    @JoinColumn(name = "IngredientID")
+    @JoinColumn(name = "IngredientId")
     private Ingredient ingredient;
 
     @ManyToOne
-    @JoinColumn(name = "UserID")
+    @JoinColumn(name = "UserId")
     private EcoUser ecoUser;
 
     @ManyToOne
-    @JoinColumn(name = "ShoppingItemDetailID")
+    @JoinColumn(name = "ShoppingItemDetailId")
     private ShoppingItemDetail shoppingItemDetail;
 }
 

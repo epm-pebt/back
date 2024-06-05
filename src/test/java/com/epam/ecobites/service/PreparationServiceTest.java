@@ -85,7 +85,7 @@ public class PreparationServiceTest {
         Recipe recipe = new Recipe();
         recipe.setId(id);
         recipe.setName(name);
-        recipe.setTime(time);
+        recipe.setCookingTime(time);
         recipe.setImage("Test Image");
         return recipe;
     }

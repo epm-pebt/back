@@ -1,5 +1,6 @@
 package com.epam.ecobites.authentication.filter;
 
+import com.epam.ecobites.authentication.service.EcoUserDetailsService;
 import com.epam.ecobites.authentication.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

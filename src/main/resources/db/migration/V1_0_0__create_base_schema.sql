@@ -1,0 +1,68 @@
+CREATE TABLE ECO_USER (
+    ID BIGINT PRIMARY KEY,
+    Username VARCHAR(255) NOT NULL UNIQUE,
+    Email VARCHAR(255) NOT NULL UNIQUE,
+    Password VARCHAR(255) NOT NULL,
+    Image TEXT,
+    Date_Created TIMESTAMP NOT NULL
+);
+
+CREATE TABLE RECIPE (
+    ID BIGINT PRIMARY KEY,
+    Name VARCHAR(255) NOT NULL,
+    dish_type VARCHAR(255) NOT NULL CHECK (dish_type IN ('APPETIZER', 'SOUP', 'SALADS', 'MAIN_COURSE', 'SIDE_DISH', 'DESSERT', 'BEVERAGE', 'SNACK', 'BREAKFAST', 'BRUNCH', 'LUNCH', 'DINNER_SUPPER')),
+    diet_category VARCHAR(255) NOT NULL CHECK (diet_category IN ('VEGETARIAN', 'VEGAN', 'PESCATARIAN', 'FLEXITARIAN', 'GLUTEN_FREE', 'LACTOSE_FREE', 'KETO', 'PALEO', 'MEDITERRANEAN', 'RAW_FOOD_DIET', 'PLANT_BASED')),
+    cooking_time INT NOT NULL,
+    Summary TEXT NOT NULL,
+    Image TEXT
+);
+
+CREATE TABLE INGREDIENT (
+    ID BIGINT PRIMARY KEY,
+    Name VARCHAR(255) NOT NULL UNIQUE
+);
+
+CREATE TABLE REVIEW (
+    ID BIGINT PRIMARY KEY,
+    user_id bigint NOT NULL,
+    recipe_id bigint NOT NULL,
+    Rate INT,
+    Content TEXT,
+    Date_Created TIMESTAMP NOT NULL
+);
+
+CREATE TABLE RECIPE_INGREDIENT (
+    ID BIGINT PRIMARY KEY,
+    recipe_id bigint NOT NULL,
+    ingredient_id bigint NOT NULL,
+    ingredient_detail_id bigint NOT NULL
+);
+
+CREATE TABLE INGREDIENT_DETAIL (
+    ID BIGINT PRIMARY KEY,
+    Quantity INT NOT NULL,
+    Unit VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE SHOPPING_ITEM (
+    ID BIGINT PRIMARY KEY,
+    ingredient_id bigint NOT NULL,
+    recipe_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    shopping_item_detail_ID bigint NOT NULL
+);
+
+CREATE TABLE SHOPPING_ITEM_DETAIL (
+    ID BIGINT PRIMARY KEY,
+    Quantity INT NOT NULL,
+    Unit VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE RECIPE_STEP (
+    ID BIGINT PRIMARY KEY,
+    recipe_id bigint NOT NULL,
+    Number SMALLINT NOT NULL,
+    Title VARCHAR(255) NOT NULL,
+    Description TEXT NOT NULL,
+    Image TEXT
+);

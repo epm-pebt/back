@@ -16,6 +16,6 @@ public class RecipeStep {
     private String image;
 
     @ManyToOne
-    @JoinColumn(name = "RecipeID")
+    @JoinColumn(name = "RecipeId")
     private Recipe recipe;
 }

@@ -1,4 +1,4 @@
-FROM postgres:16
+FROM postgres:15
 ARG password
 ENV POSTGRES_PASSWORD=$password
 ARG username

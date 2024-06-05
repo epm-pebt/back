@@ -58,7 +58,7 @@ class RecipeServiceTest {
         when(recipeMapper.toRecipeDto(any(Recipe.class)))
                 .thenAnswer(i -> createRecipeDto(
                         ((Recipe) i.getArgument(TO_RECIPE_DTO_FIRST_ARGUMENT)).getName(),
-                        ((Recipe) i.getArgument(TO_RECIPE_DTO_FIRST_ARGUMENT)).getTime()));
+                        ((Recipe) i.getArgument(TO_RECIPE_DTO_FIRST_ARGUMENT)).getCookingTime()));
 
         List<RecipeDto> result = recipeServiceImpl.getAll();
 
@@ -80,7 +80,7 @@ class RecipeServiceTest {
         when(recipeMapper.toRecipeDto(any(Recipe.class)))
                 .thenAnswer(i -> createRecipeDto(
                         ((Recipe) i.getArgument(TO_RECIPE_DTO_FIRST_ARGUMENT)).getName(),
-                        ((Recipe) i.getArgument(TO_RECIPE_DTO_FIRST_ARGUMENT)).getTime()));
+                        ((Recipe) i.getArgument(TO_RECIPE_DTO_FIRST_ARGUMENT)).getCookingTime()));
 
         List<RecipeDto> result = recipeServiceImpl.findTop10ByLeastCookingTime();
 
@@ -101,7 +101,7 @@ class RecipeServiceTest {
         when(recipeMapper.toRecipeDto(any(Recipe.class)))
                 .thenAnswer(i -> createRecipeDto(
                         ((Recipe) i.getArgument(TO_RECIPE_DTO_FIRST_ARGUMENT)).getName(),
-                        ((Recipe) i.getArgument(TO_RECIPE_DTO_FIRST_ARGUMENT)).getTime()));
+                        ((Recipe) i.getArgument(TO_RECIPE_DTO_FIRST_ARGUMENT)).getCookingTime()));
 
         List<RecipeDto> result = recipeServiceImpl.searchRecipes(SEARCH_TEXT);
 
@@ -113,7 +113,7 @@ class RecipeServiceTest {
         Recipe recipe = new Recipe();
         recipe.setId(id);
         recipe.setName(name);
-        recipe.setTime(time);
+        recipe.setCookingTime(time);
         recipe.setImage("Test Image");
         return recipe;
     }
@@ -121,7 +121,7 @@ class RecipeServiceTest {
     private RecipeDto createRecipeDto(String name, int time) {
         RecipeDto recipeDto = new RecipeDto();
         recipeDto.setName(name);
-        recipeDto.setTime(time);
+        recipeDto.setCookingTime(time);
         recipeDto.setImage("Test Image");
         return recipeDto;
     }
