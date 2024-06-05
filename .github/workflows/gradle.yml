@@ -47,12 +47,15 @@ jobs:
       run: gradle build --info
       working-directory: src/main/resources/db
 
-    - name: List JAR files
-      run: |
-        echo 'ls -l /src/main/resources/db/build/libs'
-        ls -l src/main/resources/db/build/libs
-        echo ' /build/libs'
-        ls -l /build/libs
+    # - name: Find build.gradle
+    #   run: find . -name build.gradle
+
+    # - name: List JAR files
+    #   run: |
+    #     echo 'ls -l /src/main/resources/db/build/libs'
+    #     ls -la /src/main/resources/db/build/libs
+    #     echo ' /build/libs'
+    #     ls -la /build/libs
 
     # - name: List files in db/migration/
     #   if: failure()
