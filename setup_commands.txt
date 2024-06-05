@@ -1,4 +1,4 @@
-cd db
+cd src/main/resources/db
 docker build --build-arg password=admin --build-arg username=admin -t ecobites-db-image .
 
 cd ..
