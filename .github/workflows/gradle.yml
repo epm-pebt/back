@@ -25,6 +25,10 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      REGISTRY_ALIAS: ${{ vars.ECR_ALIAS }}
+      REPOSITORY: ${{ vars.ECR_NAME }}
+
     outputs: 
       IMAGE_TAG: ${{ steps.docker_tag.outputs.IMAGE_TAG }}
 
@@ -44,27 +48,8 @@ jobs:
         gradle-version: '8.5'
 
     - name: Build with Gradle 8.5
-      run: gradle build --info
-      # working-directory: src/main/resources/db/
-
-    # - name: List JAR files
-    #   run: |
-    #     echo 'ls -l src/main/resources/db/.gradle'
-    #     ls -la src/main/resources/db/.gradle
-    #     echo 'ls -l src/main/resources/db'
-    #     ls -la src/main/resources/db
-    #     echo 'ls -l src/main/resources/migration'
-    #     ls -la src/main/resources/migration
-    # - name: List files in db/migration/
-    #   if: failure()
-    #   run: ls -la db/migration/
-
-    # - name: Upload Flyway log
-    #   uses: actions/upload-artifact@v4
-    #   if: failure()
-    #   with:
-    #     name: flyway-log
-    #     path: db/migration/flyway.log    
+      run: gradle build 
+#     run: gradle build --info
 
     - name: Semantic Release
       uses: cycjimmy/semantic-release-action@v4
@@ -106,18 +91,18 @@ jobs:
     - name: Build, tag, and push app-docker image to Amazon ECR Public
       env:
         REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
-        REGISTRY_ALIAS: ${{ vars.ECR_ALIAS }}
-        REPOSITORY: ${{ vars.ECR_NAME }}
+        # REGISTRY_ALIAS: ${{ vars.ECR_ALIAS }}
+        # REPOSITORY: ${{ vars.ECR_NAME }}
         PREFIX: app
       run: |
-        docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PREFIX-$IMAGE_TAG .
+        docker build -t $REGISTRY/${{ vars.ECR_ALIAS }}/${{ vars.ECR_NAME }}:$PREFIX-$IMAGE_TAG .
         docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PREFIX-$IMAGE_TAG
 
     - name: Build, tag, and push db-docker image to Amazon ECR Public
       env:
         REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
-        REGISTRY_ALIAS: ${{ vars.ECR_ALIAS }}
-        REPOSITORY: ${{ vars.ECR_NAME }}
+        # REGISTRY_ALIAS: ${{ vars.ECR_ALIAS }}
+        # REPOSITORY: ${{ vars.ECR_NAME }}
         PREFIX: db
       run: |
         docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PREFIX-$IMAGE_TAG src/main/resources/db
