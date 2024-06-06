@@ -45,16 +45,16 @@ jobs:
 
     - name: Build with Gradle 8.5
       run: gradle build --info
-      working-directory: src/main/resources/db/
+      # working-directory: src/main/resources/db/
 
-    - name: List JAR files
-      run: |
-        echo 'ls -l src/main/resources/db/.gradle'
-        ls -la src/main/resources/db/.gradle
-        echo 'ls -l src/main/resources/db'
-        ls -la src/main/resources/db
-        echo 'ls -l src/main/resources/migration'
-        ls -la src/main/resources/migration
+    # - name: List JAR files
+    #   run: |
+    #     echo 'ls -l src/main/resources/db/.gradle'
+    #     ls -la src/main/resources/db/.gradle
+    #     echo 'ls -l src/main/resources/db'
+    #     ls -la src/main/resources/db
+    #     echo 'ls -l src/main/resources/migration'
+    #     ls -la src/main/resources/migration
     # - name: List files in db/migration/
     #   if: failure()
     #   run: ls -la db/migration/
