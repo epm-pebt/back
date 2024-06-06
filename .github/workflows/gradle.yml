@@ -25,9 +25,9 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      REGISTRY_ALIAS: ${{ vars.ECR_ALIAS }}
-      REPOSITORY: ${{ vars.ECR_NAME }}
+    # env:
+    #   REGISTRY_ALIAS: ${{ vars.ECR_ALIAS }}
+    #   REPOSITORY: ${{ vars.ECR_NAME }}
 
     outputs: 
       IMAGE_TAG: ${{ steps.docker_tag.outputs.IMAGE_TAG }}
