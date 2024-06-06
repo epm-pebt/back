@@ -120,7 +120,7 @@ jobs:
         REPOSITORY: ${{ vars.ECR_NAME }}
         PREFIX: db
       run: |
-        docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PREFIX-$IMAGE_TAG db
+        docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PREFIX-$IMAGE_TAG src/main/resources/db
         docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PREFIX-$IMAGE_TAG
 
   deliver:
