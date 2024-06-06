@@ -53,6 +53,8 @@ jobs:
         ls -la src/main/resources/db/.gradle
         echo 'ls -l src/main/resources/db'
         ls -la src/main/resources/db
+        echo 'ls -l src/main/resources/migration'
+        ls -la src/main/resources/migration
     # - name: List files in db/migration/
     #   if: failure()
     #   run: ls -la db/migration/
