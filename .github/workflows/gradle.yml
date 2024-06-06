@@ -96,7 +96,7 @@ jobs:
         PREFIX: app
       run: |
         docker build -t $REGISTRY/${{ vars.ECR_ALIAS }}/${{ vars.ECR_NAME }}:$PREFIX-$IMAGE_TAG .
-        docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PREFIX-$IMAGE_TAG
+        docker push $REGISTRY/${{ vars.ECR_ALIAS }}/${{ vars.ECR_NAME }}:$PREFIX-$IMAGE_TAG
 
     - name: Build, tag, and push db-docker image to Amazon ECR Public
       env:
