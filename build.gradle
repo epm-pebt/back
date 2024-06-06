@@ -9,6 +9,7 @@ version = '0.0.1-SNAPSHOT'
 
 java {
 	sourceCompatibility = '21'
+
 }
 
 repositories {
@@ -39,6 +40,15 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	runtimeOnly 'com.h2database:h2'
+	jar {
+		duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+		manifest {
+			attributes 'Main-Class': 'com.epam.ecobites.EcobitesApplication'
+		}
+		from {
+			configurations.compileClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+		}
+	}
 }
 
 tasks.named('test') {
