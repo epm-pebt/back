@@ -9,7 +9,7 @@ jobs:
     env:
       DOCKER_COMPOSE_TARGET_PATH: /home/ec2-user/docker-compose.yaml
       SQL_MIGRATION_FILE_NAME: V1_0_0__create_base_schema.sql
-      SQL_MIGRATION_SOURCE_PATH: ./db/migration/
+      SQL_MIGRATION_SOURCE_PATH: ./src/main/resources/db/migration/
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
