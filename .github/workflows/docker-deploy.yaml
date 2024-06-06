@@ -6,6 +6,10 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      DOCKER_COMPOSE_TARGET_PATH: /home/ec2-user/docker-compose.yaml
+      SQL_MIGRATION_FILE_NAME: V1_0_0__create_base_schema.sql
+      SQL_MIGRATION_SOURCE_PATH: ./db/migration/
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -40,7 +44,7 @@ jobs:
       - name: Transfer docker-compose to EC2
         id: transfer
         run: |
-            output=$(aws ssm send-command --instance-ids ${{env.INSTANCE_ID}} --document-name "AWS-RunShellScript" --parameters commands=["aws s3 cp s3://${{ env.ARTIFACT_S3_NAME }}/docker-compose.yaml /home/ec2-user/docker-compose.yaml"])
+            output=$(aws ssm send-command --instance-ids ${{env.INSTANCE_ID}} --document-name "AWS-RunShellScript" --parameters commands=["aws s3 cp s3://${{ env.ARTIFACT_S3_NAME }}/docker-compose.yaml $DOCKER_COMPOSE_TARGET_PATH"])
             command_id=$(echo $output | jq -r '.Command.CommandId')
             echo "transfer-command-id=$command_id" >> $GITHUB_OUTPUT
 
@@ -63,12 +67,12 @@ jobs:
 
       - name: Upload SQL migration script to S3
         run: |
-            aws s3 cp ./db/migration/V1_0_0__create_base_schema.sql s3://${{ env.ARTIFACT_S3_NAME }}/V1_0_0__create_base_schema.sql
+            aws s3 cp $SQL_MIGRATION_SOURCE_PATH/$SQL_MIGRATION_FILE_NAME s3://${{ env.ARTIFACT_S3_NAME }}/$SQL_MIGRATION_FILE_NAME
           
       - name: Transfer SQL migration script to EC2
         id: transfer_sql
         run: |
-            output=$(aws ssm send-command --instance-ids ${{env.INSTANCE_ID}} --document-name "AWS-RunShellScript" --parameters commands=["aws s3 cp s3://${{ env.ARTIFACT_S3_NAME }}/V1_0_0__create_base_schema.sql /home/ec2-user/V1_0_0__create_base_schema.sql"])
+            output=$(aws ssm send-command --instance-ids ${{env.INSTANCE_ID}} --document-name "AWS-RunShellScript" --parameters commands=["aws s3 cp s3://${{ env.ARTIFACT_S3_NAME }}/$SQL_MIGRATION_FILE_NAME /home/ec2-user/$SQL_MIGRATION_FILE_NAME"])
             command_id=$(echo $output | jq -r '.Command.CommandId')
             echo "transfer-sql-command-id=$command_id" >> $GITHUB_ENV
       
@@ -92,7 +96,7 @@ jobs:
       - name: Deploy to EC2
         id: deploy
         run: |
-            output=$(aws ssm send-command --instance-ids ${{env.INSTANCE_ID}} --document-name "AWS-RunShellScript" --parameters commands='["sudo docker-compose -f /home/ec2-user/docker-compose.yaml down", "sudo docker-compose -f /home/ec2-user/docker-compose.yaml up -d"]')
+            output=$(aws ssm send-command --instance-ids ${{env.INSTANCE_ID}} --document-name "AWS-RunShellScript" --parameters commands='["sudo docker-compose -f $DOCKER_COMPOSE_TARGET_PATH down", "sudo docker-compose -f $DOCKER_COMPOSE_TARGET_PATH up -d"]')
             command_id=$(echo $output | jq -r '.Command.CommandId')
             echo "deploy-command-id=$command_id" >> $GITHUB_OUTPUT
 
