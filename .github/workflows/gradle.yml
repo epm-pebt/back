@@ -51,8 +51,8 @@ jobs:
       run: |
         echo 'ls -l src/main/resources/db/.gradle'
         ls -la src/main/resources/db/.gradle
-        echo ' build/libs'
-        ls -la build/libs
+        echo 'ls -l src/main/resources/db'
+        ls -la src/main/resources/db
     # - name: List files in db/migration/
     #   if: failure()
     #   run: ls -la db/migration/
