@@ -96,7 +96,7 @@ jobs:
       - name: Deploy to EC2
         id: deploy
         run: |
-            output=$(aws ssm send-command --instance-ids ${{env.INSTANCE_ID}} --document-name "AWS-RunShellScript" --parameters commands='["sudo docker-compose -f ${{env.DOCKER_COMPOSE_TARGET_PATH}}down", "sudo docker-compose -f ${{env.DOCKER_COMPOSE_TARGET_PATH}} up -d"]')
+            output=$(aws ssm send-command --instance-ids ${{env.INSTANCE_ID}} --document-name "AWS-RunShellScript" --parameters commands='["sudo docker-compose -f ${{env.DOCKER_COMPOSE_TARGET_PATH}} up -d --force-recreate"]')
             command_id=$(echo $output | jq -r '.Command.CommandId')
             echo "deploy-command-id=$command_id" >> $GITHUB_OUTPUT
 
