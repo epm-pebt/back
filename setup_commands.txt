@@ -1,5 +1,5 @@
-cd src/main/resources/db
-docker build --build-arg password=postgres --build-arg username=postgres -t ecobites-db-image .
+cd db
+docker build --build-arg password=postgresql --build-arg username=postgresql -t ecobites-db-image .
 
 cd ..
 
