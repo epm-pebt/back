@@ -8,15 +8,20 @@
 name: Java CI with Gradle
 
 on:
-  workflow_dispatch:
+  # workflow_dispatch:
+  #   inputs:
+  #     environment:
+  #       description: "Chose environment to deploy"
+  #       required: true
+  #       type: choice
+  #       options:
+  #         - dev
+  #         # - prod
+  workflow_call:
     inputs:
       environment:
-        description: "Chose environment to deploy"
-        required: true
-        type: choice
-        options:
-          - dev
-          # - prod
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -25,13 +30,15 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     outputs: 
       IMAGE_TAG: ${{ steps.docker_tag.outputs.IMAGE_TAG }}
 
     steps:
     - name: Checkout sources
       uses: actions/checkout@v4
+      with:
+        repository: epm-pebt/back       # Change in case of code moving
+        ref: CI-CD-restructured
 
     - name: Set up JDK 21
       uses: actions/setup-java@v4
@@ -88,6 +95,8 @@ jobs:
     - name: Build, tag, and push app-docker image to Amazon ECR Public
       env:
         REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
+        REGISTRY_ALIAS: ${{ vars.ECR_ALIAS }}
+        REPOSITORY: ${{ vars.ECR_NAME }}
         PREFIX: app
       run: |
         docker build -t $REGISTRY/${{ vars.ECR_ALIAS }}/${{ vars.ECR_NAME }}:$PREFIX-$IMAGE_TAG .
@@ -96,24 +105,10 @@ jobs:
     - name: Build, tag, and push db-docker image to Amazon ECR Public
       env:
         REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
+        REGISTRY_ALIAS: ${{ vars.ECR_ALIAS }}
+        REPOSITORY: ${{ vars.ECR_NAME }}
         PREFIX: db
       run: |
-        docker build --build-arg password=postgres --build-arg username=postgres -t $REGISTRY/${{ vars.ECR_ALIAS }}/${{ vars.ECR_NAME }}:$PREFIX-$IMAGE_TAG src/main/resources/db
+        docker build -t $REGISTRY/${{ vars.ECR_ALIAS }}/${{ vars.ECR_NAME }}:$PREFIX-$IMAGE_TAG src/main/resources/db
         docker push $REGISTRY/${{ vars.ECR_ALIAS }}/${{ vars.ECR_NAME }}:$PREFIX-$IMAGE_TAG
 
-  deliver:
-    needs: build
-    uses: epm-pebt/infra/.github/workflows/infra-create.yaml@CI-CD-restructured
-    permissions:
-      id-token: write
-      contents: read
-    with:
-      environment: ${{ github.event.inputs.environment }}
-      trigger_pipeline: ${{ github.workflow }}
-
-  deploy:
-    needs: deliver
-    uses: epm-pebt/back/.github/workflows/docker-deploy.yaml@CI-CD-restructured
-    permissions:
-      id-token: write
-      contents: read
