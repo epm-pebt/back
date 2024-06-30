@@ -15,9 +15,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        # with:
-        #   repository: epm-pebt/back     # Change in case of code moving. Set main after final version of pipeline is merged.
-        #   ref: CI-CD-restructured
+        with:
+          repository: epm-pebt/back     # Change in case of code moving. Set main after final version of pipeline is merged.
+          ref: CI-CD-restructured
 
       - name: Download artifact
         uses: actions/download-artifact@v4
