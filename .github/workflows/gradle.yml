@@ -24,7 +24,7 @@ on:
         type: string
 
 permissions:
-  contents: write
+  contents: read
   id-token: write
 
 jobs:
@@ -76,11 +76,10 @@ jobs:
       run: |
         IMAGE_TAG="v0.0.0"
         if [ "${{ steps.semantic.outputs.new_release_published }}" = "true" ]; then
-          IMAGE_TAG="v${{ steps.semantic.outputs.new_release_version }}"
-        elif GIT_TAG=$(git describe --tags --abbrev=0); then
-          IMAGE_TAG=$GIT_TAG
+          echo "IMAGE_TAG=v${{ steps.semantic.outputs.new_release_version }}" | tee -a $GITHUB_ENV > variables.env
+        else
+          echo "IMAGE_TAG=$(git describe --tags --abbrev=0)" | tee -a $GITHUB_ENV > variables.env
         fi
-        echo "IMAGE_TAG=$IMAGE_TAG" | tee -a $GITHUB_ENV > variables.env
         cat variables.env
 
     - name: Artifact creation
@@ -102,9 +101,9 @@ jobs:
         REPOSITORY: ${{ vars.ECR_NAME }}
         PREFIX: app
       run: |
-        docker build -t $REGISTRY/${{ vars.ECR_ALIAS }}/${{ vars.ECR_NAME }}:$PREFIX-$IMAGE_TAG .
-        docker push $REGISTRY/${{ vars.ECR_ALIAS }}/${{ vars.ECR_NAME }}:$PREFIX-$IMAGE_TAG
-
+        docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PREFIX-$IMAGE_TAG .
+        docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PREFIX-$IMAGE_TAG
+  
     - name: Build, tag, and push db-docker image to Amazon ECR Public
       env:
         REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
@@ -112,6 +111,5 @@ jobs:
         REPOSITORY: ${{ vars.ECR_NAME }}
         PREFIX: db
       run: |
-        docker build -t $REGISTRY/${{ vars.ECR_ALIAS }}/${{ vars.ECR_NAME }}:$PREFIX-$IMAGE_TAG src/main/resources/db
-        docker push $REGISTRY/${{ vars.ECR_ALIAS }}/${{ vars.ECR_NAME }}:$PREFIX-$IMAGE_TAG
-
+        docker build  --build-arg username=admin --build-arg password=admin -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PREFIX-$IMAGE_TAG db
+        docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$PREFIX-$IMAGE_TAG
