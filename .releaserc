@@ -10,6 +10,6 @@
         "@semantic-release/changelog",
         "@semantic-release/github"
     ],
-    "dry_run": false,
+    "dry_run": true,
     "debug": false
 }
