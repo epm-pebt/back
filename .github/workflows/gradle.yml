@@ -29,9 +29,9 @@ permissions:
 
 jobs:
   build:
-    # permissions:
-    #   contents: read
-    #   id-token: write
+    permissions:
+      contents: write
+      id-token: write
     runs-on: ubuntu-latest
     outputs: 
       IMAGE_TAG: ${{ steps.docker_tag.outputs.IMAGE_TAG }}
