@@ -1,7 +1,9 @@
 {
     "branches": [
         "develop",
-        "CI-CD-restructured"
+        "CI-CD-restructured",
+        "main",
+        "CD_backend_workflow"
     ],
     "tagFormat": "v${version}",
     "plugins": [
