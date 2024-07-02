@@ -1,6 +1,6 @@
 {
     "branches": [
-        "deveop",
+        "develop",
         "CI-CD-restructured"
     ],
     "tagFormat": "v${version}",
