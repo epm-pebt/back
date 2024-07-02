@@ -57,11 +57,12 @@ jobs:
 
 # TODO: this step works properly being triggered from back repository but ran into an issue while triggered from infra repo.
 # Try please this configuration when repo configuring https://github.com/semantic-release/semantic-release/issues/2481#issuecomment-2092425911
-    - name: Semantic Release
-      uses: cycjimmy/semantic-release-action@v4
-      id: semantic
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+# Or try launch it from another step (as separate pipeline)
+    # - name: Semantic Release
+    #   uses: cycjimmy/semantic-release-action@v4
+    #   id: semantic
+    #   env:
+    #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
